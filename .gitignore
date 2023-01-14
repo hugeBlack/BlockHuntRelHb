@@ -108,3 +108,4 @@ buildNumber.properties
 /server/*
 .idea
 target
+*.iml
