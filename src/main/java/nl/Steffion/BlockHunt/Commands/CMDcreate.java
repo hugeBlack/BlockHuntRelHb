@@ -23,14 +23,14 @@ public class CMDcreate extends DefaultCMD {
         if (W.config.getFile().getBoolean("wandEnabled")) {
           arena = new Arena(args[1], (LocationSerializable)W.pos1.get(player), (LocationSerializable)W.pos2.get(player), 12, 3, 1, 50, 20, 300, 30, 
               new ArrayList(), null, null, null, null, new ArrayList(), 
-              new ArrayList(), new ArrayList(), 10, 50, 8, new ArrayList(), 
-              Arena.ArenaState.WAITING, 0, new ArrayList(), 
+              new ArrayList(), new ArrayList(), 10, 50, 8,
+              Arena.ArenaState.WAITING, 0,
               Bukkit.getScoreboardManager().getNewScoreboard());
         } else {
           arena = new Arena(args[1], null, null, 12, 3, 1, 50, 20, 300, 30, new ArrayList(), 
               null, null, null, null, new ArrayList(), new ArrayList(), 
-              new ArrayList(), 10, 50, 8, new ArrayList(), Arena.ArenaState.WAITING, 0, 
-              new ArrayList(), Bukkit.getScoreboardManager().getNewScoreboard());
+              new ArrayList(), 10, 50, 8, Arena.ArenaState.WAITING, 0,
+              Bukkit.getScoreboardManager().getNewScoreboard());
         } 
         W.arenas.getFile().set(args[1], arena);
         W.arenas.save();

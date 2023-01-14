@@ -1,6 +1,7 @@
 package nl.Steffion.BlockHunt;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import me.libraryaddict.disguise.DisguiseAPI;
 import nl.Steffion.BlockHunt.Managers.MessageM;
@@ -228,7 +229,12 @@ public class ArenaHandler {
         if (arena.seekers.size() >= arena.playersInArena.size())
           seekersWin(arena); 
         if (arena.seekers.size() <= 0 && arena.gameState == Arena.ArenaState.INGAME) {
-          Player seeker = arena.playersInArena.get(W.random.nextInt(arena.playersInArena.size()));
+          Iterator<Player> it = arena.playersInArena.iterator();
+          int playeri = W.random.nextInt(arena.playersInArena.size());
+          for(int i=0;i<playeri-1;i++){
+            it.next();
+          }
+          Player seeker = it.next();
           sendFMessage(arena, ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
           sendFMessage(arena, ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
           DisguiseAPI.undisguiseToAll(seeker);
