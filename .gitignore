@@ -106,3 +106,5 @@ buildNumber.properties
 
 ### Minecraft Server Debug ###
 /server/*
+.idea
+target
