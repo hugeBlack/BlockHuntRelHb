@@ -23,61 +23,43 @@ import org.bukkit.scoreboard.Scoreboard;
 @SerializableAs("BlockHuntArena")
 public class Arena implements ConfigurationSerializable {
     public String arenaName;
-
-    public LocationSerializable pos1;
-
-    public LocationSerializable pos2;
-
+    public Location pos1;
+    public Location pos2;
     public int maxPlayers;
-
     public int minPlayers;
-
     public int amountSeekersOnStart;
-
     public int timeInLobbyUntilStart;
-
     public int waitingTimeSeeker;
-
     public int gameTime;
-
     public int timeUntilHidersSword;
-
     public ArrayList<ItemStack> disguiseBlocks;
-
     public LocationSerializable lobbyWarp;
-
     public LocationSerializable hidersWarp;
-
     public LocationSerializable seekersWarp;
-
     public LocationSerializable spawnWarp;
-
     public List<String> seekersWinCommands;
-
     public List<String> hidersWinCommands;
-
     public List<String> allowedCommands;
-
     public int seekersTokenWin;
-
     public int hidersTokenWin;
-
     public int killTokens;
-
     public HashSet<Player> playersInArena;
-
     public ArenaState gameState;
-
     public int timer;
-
     public HashSet<Player> seekers;
-
     public Scoreboard scoreboard;
 
     public Arena(String arenaName, LocationSerializable pos1, LocationSerializable pos2, int maxPlayers, int minPlayers, int amountSeekersOnStart, int timeInLobbyUntilStart, int waitingTimeSeeker, int gameTime, int timeUntilHidersSword, ArrayList<ItemStack> disguiseBlocks, LocationSerializable lobbyWarp, LocationSerializable hidersWarp, LocationSerializable seekersWarp, LocationSerializable spawnWarp, List<String> seekersWinCommands, List<String> hidersWinCommands, List<String> allowedCommands, int seekersTokenWin, int hidersTokenWin, int killTokens, ArenaState gameState, int timer, Scoreboard scoreboard) {
         this.arenaName = arenaName;
-        this.pos1 = pos1;
-        this.pos2 = pos2;
+        double maxX = Math.max(pos1.getX(), pos2.getX());
+        double minX = Math.min(pos1.getX(), pos2.getX());
+        double maxY = Math.max(pos1.getY(), pos2.getY());
+        double minY = Math.min(pos1.getY(), pos2.getY());
+        double maxZ = Math.max(pos1.getZ(), pos2.getZ());
+        double minZ = Math.min(pos1.getZ(), pos2.getZ());
+        //pos1是xyz中小的，pos2是xyz中大的
+        this.pos1 = new Location(pos1.getWorld(),minX,minY,minZ);
+        this.pos2 = new Location(pos2.getWorld(),maxX,maxY,maxZ);;
         this.maxPlayers = maxPlayers;
         this.minPlayers = minPlayers;
         this.amountSeekersOnStart = amountSeekersOnStart;
@@ -165,6 +147,13 @@ public class Arena implements ConfigurationSerializable {
                 0,
                 Bukkit.getScoreboardManager()
                         .getNewScoreboard());
+    }
+
+    /**
+     * 检查x使否在[min{a,b},max{a,b}]间
+     */
+    public boolean isLocationInArena(Location location){
+        return location.getWorld() == pos1.getWorld() && location.getX()>=pos1.getX() && location.getY()>=pos1.getY() && location.getZ()>=pos1.getZ() && location.getX()<=pos2.getX() && location.getY()<=pos2.getY()&& location.getZ()<=pos2.getZ();
     }
 
     private void sendGameStartCountDownMsg() {

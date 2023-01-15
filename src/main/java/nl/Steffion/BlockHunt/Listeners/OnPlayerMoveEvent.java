@@ -12,64 +12,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class OnPlayerMoveEvent implements Listener {
-  @EventHandler(priority = EventPriority.NORMAL)
-  public void onPlayerMoveEvent(PlayerMoveEvent event) {
-    Player player = event.getPlayer();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player) && 
-        arena.gameState == Arena.ArenaState.INGAME) {
-        W.moveLoc.put(player, player.getLocation());
-        if (!W.config.getFile().getBoolean("wandEnabled"))
-          continue; 
-        double maxX = Math.max(arena.pos1.getX(), arena.pos2.getX());
-        double minX = Math.min(arena.pos1.getX(), arena.pos2.getX());
-        double maxY = Math.max(arena.pos1.getY(), arena.pos2.getY());
-        double minY = Math.min(arena.pos1.getY(), arena.pos2.getY());
-        double maxZ = Math.max(arena.pos1.getZ(), arena.pos2.getZ());
-        double minZ = Math.min(arena.pos1.getZ(), arena.pos2.getZ());
-        Location loc = player.getLocation();
-        if (loc.getBlockX() > maxX) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-          continue;
-        } 
-        if (loc.getBlockX() < minX) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-          continue;
-        } 
-        if (loc.getBlockZ() > maxZ) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-          continue;
-        } 
-        if (loc.getBlockZ() < minZ) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-          continue;
-        } 
-        if (loc.getBlockY() > maxY) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-          continue;
-        } 
-        if (loc.getBlockY() < minY) {
-          event.setCancelled(true);
-          player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-          player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-          player.teleport((Location)arena.hidersWarp);
-        } 
-      } 
-    } 
-  }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerMoveEvent(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        for (Arena arena : W.arenaList) {
+            if (arena.playersInArena.contains(player) &&
+                    arena.gameState == Arena.ArenaState.INGAME) {
+                W.moveLoc.put(player, player.getLocation());
+                if (!W.config.getFile().getBoolean("wandEnabled"))
+                    continue;
+                Location loc = player.getLocation();
+                if (!arena.isLocationInArena(loc)) {
+                    event.setCancelled(true);
+                    player.playEffect(loc, Effect.ENDER_SIGNAL, null);
+                    player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
+                    player.teleport(arena.hidersWarp);
+                    continue;
+                }
+            }
+        }
+    }
 }

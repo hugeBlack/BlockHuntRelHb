@@ -10,16 +10,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class OnEntityDamageEvent implements Listener {
-  @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-  public void onEntityDamageEvent(EntityDamageEvent event) {
-    Entity ent = event.getEntity();
-    if (ent instanceof Player) {
-      Player player = (Player)event.getEntity();
-      for (Arena arena : W.arenaList) {
-        if (arena.playersInArena.contains(player) && 
-          !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK))
-          event.setCancelled(true); 
-      } 
-    } 
-  }
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        Entity ent = event.getEntity();
+        if (ent instanceof Player) {
+            Player player = (Player) event.getEntity();
+            for (Arena arena : W.arenaList) {
+              //玩家只能受到虚空或者其他玩家的伤害
+                if (arena.playersInArena.contains(player) && !(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.VOID))
+                event.setCancelled(true);
+            }
+        }
+    }
 }
