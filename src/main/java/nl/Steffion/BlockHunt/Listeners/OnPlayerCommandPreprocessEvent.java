@@ -32,9 +32,9 @@ public class OnPlayerCommandPreprocessEvent implements Listener {
           if (m.startsWith("/" + command))
             return; 
         } 
-        if (PermissionsM.hasPerm(player, PermissionsC.Permissions.allcommands, Boolean.valueOf(false)))
+        if (PermissionsM.hasPerm(player, PermissionsC.Permissions.allcommands, Boolean.FALSE))
           return; 
-        MessageM.sendFMessage(player, ConfigC.warning_unableToCommand, new String[0]);
+        MessageM.sendFMessage(player, ConfigC.warning_unableToCommand);
         event.setCancelled(true);
       } 
     } 

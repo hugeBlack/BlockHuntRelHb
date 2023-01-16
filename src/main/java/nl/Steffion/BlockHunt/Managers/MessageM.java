@@ -21,12 +21,12 @@ public class MessageM {
     if (player == null) {
       Bukkit.getConsoleSender().sendMessage(
           replaceAll(
-            location.config.getFile().get(location.location)
+            location.config.getFile().get(location.fileKey)
             .toString()
             .replaceAll("%player%", "Console"), vars));
     } else {
       player.sendMessage(replaceAll(
-            location.config.getFile().get(location.location).toString()
+            location.config.getFile().get(location.fileKey).toString()
             .replaceAll("%player%", player.getName()), vars));
     } 
   }
@@ -43,11 +43,11 @@ public class MessageM {
   public static void broadcastFMessage(ConfigC location, String... vars) {
     for (Player player : Bukkit.getOnlinePlayers())
       player.sendMessage(replaceAll(
-            location.config.getFile().get(location.location).toString()
+            location.config.getFile().get(location.fileKey).toString()
             .replaceAll("%player%", player.getName()), vars)); 
     Bukkit.getConsoleSender().sendMessage(
         replaceAll(
-          location.config.getFile().get(location.location)
+          location.config.getFile().get(location.fileKey)
           .toString().replaceAll("%player%", "Console"), 
           vars));
   }

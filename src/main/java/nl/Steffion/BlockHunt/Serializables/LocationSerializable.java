@@ -20,7 +20,7 @@ public class LocationSerializable extends Location implements ConfigurationSeria
   }
   
   public boolean equals(Object o) {
-    if (o instanceof LocationSerializable || o instanceof Location) {
+    if (o instanceof Location) {
       Location loc = (Location)o;
       return (loc.getWorld().getName().equals(getWorld().getName()) && 
         loc.getX() == getX() && loc.getY() == getY() && 
@@ -33,13 +33,13 @@ public class LocationSerializable extends Location implements ConfigurationSeria
   public Map<String, Object> serialize() {
     Map<String, Object> map = new HashMap<>();
     map.put("w", getWorld().getName());
-    map.put("x", Double.valueOf(getX()));
-    map.put("y", Double.valueOf(getY()));
-    map.put("z", Double.valueOf(getZ()));
+    map.put("x", getX());
+    map.put("y", getY());
+    map.put("z", getZ());
     if (getYaw() != 0.0D)
-      map.put("a", Float.valueOf(getYaw())); 
+      map.put("a", getYaw());
     if (getPitch() != 0.0D)
-      map.put("p", Float.valueOf(getPitch())); 
+      map.put("p", getPitch());
     return map;
   }
   
@@ -48,12 +48,11 @@ public class LocationSerializable extends Location implements ConfigurationSeria
     if (w == null) {
       MessageM.sendMessage(
           null, 
-          "%EError deserializing LocationSerializable - world not found! (%A%w%%E)", new String[] { "w-" + w });
+          "%EError deserializing LocationSerializable - world not found! (%A%w%%E)", "w-" + w);
       return null;
     } 
-    return new LocationSerializable(w, ((Double)M.g(map, "x", Double.valueOf(0.0D))).doubleValue(), (
-        (Double)M.g(map, "y", Double.valueOf(0.0D))).doubleValue(), ((Double)M.g(map, "z", Double.valueOf(0.0D))).doubleValue(), (
-        (Double)M.g(map, "a", Double.valueOf(0.0D))).floatValue(), ((Double)M.g(map, 
-          "p", Double.valueOf(0.0D))).floatValue());
+    return new LocationSerializable(w, (Double) M.g(map, "x", 0.0D), (Double) M.g(map, "y", 0.0D), (Double) M.g(map, "z", 0.0D), (
+        (Double)M.g(map, "a", 0.0D)).floatValue(), ((Double)M.g(map,
+          "p", 0.0D)).floatValue());
   }
 }

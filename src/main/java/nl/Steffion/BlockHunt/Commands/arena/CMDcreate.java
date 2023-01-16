@@ -1,22 +1,25 @@
-package nl.Steffion.BlockHunt.Commands;
+package nl.Steffion.BlockHunt.Commands.arena;
 
 import java.util.ArrayList;
-import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.BlockHunt;
-import nl.Steffion.BlockHunt.ConfigC;
+import java.util.List;
+
+import nl.Steffion.BlockHunt.*;
+import nl.Steffion.BlockHunt.Commands.DefaultCMD;
 import nl.Steffion.BlockHunt.Managers.MessageM;
-import nl.Steffion.BlockHunt.ScoreboardHandler;
 import nl.Steffion.BlockHunt.Serializables.LocationSerializable;
-import nl.Steffion.BlockHunt.W;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 public class CMDcreate extends DefaultCMD {
-  public boolean exectue(Player player, Command cmd, String label, String[] args) {
+  public CMDcreate(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
+    super(name, label, args, argsalias, permission, help, enabled, usage);
+  }
+
+  public boolean execute(Player player, Command cmd, String label, String[] args) {
     if (player != null) {
       if (args.length <= 1) {
-        MessageM.sendFMessage(player, ConfigC.error_notEnoughArguments, new String[] { "syntax-" + BlockHunt.CMDcreate.usage });
+        MessageM.sendFMessage(player, ConfigC.error_notEnoughArguments, "syntax-" + usage);
       } else if ((W.pos1.get(player) != null && W.pos2.get(player) != null) || 
         !W.config.getFile().getBoolean("wandEnabled")) {
         Arena arena;
@@ -37,19 +40,13 @@ public class CMDcreate extends DefaultCMD {
         W.signs.load();
         W.arenaList.add(arena);
         ScoreboardHandler.createScoreboard(arena);
-        MessageM.sendFMessage(player, ConfigC.normal_createCreatedArena, new String[] { "name-" + args[1] });
+        MessageM.sendFMessage(player, ConfigC.normal_createCreatedArena, "name-" + args[1]);
       } else {
-        MessageM.sendFMessage(player, ConfigC.error_createSelectionFirst, new String[0]);
+        MessageM.sendFMessage(player, ConfigC.error_createSelectionFirst);
       } 
     } else {
-      MessageM.sendFMessage(player, ConfigC.error_onlyIngame, new String[0]);
+      MessageM.sendFMessage(player, ConfigC.error_onlyIngame);
     } 
     return true;
   }
 }
-
-
-/* Location:              E:\minecraft\hideandSeek\plugins\BlockHuntRel-1.18.2.jar!\nl\Steffion\BlockHunt\Commands\CMDcreate.class
- * Java compiler version: 17 (61.0)
- * JD-Core Version:       1.1.3
- */

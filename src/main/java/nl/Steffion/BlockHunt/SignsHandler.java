@@ -104,7 +104,7 @@ public class SignsHandler {
         String[] lines = signblock.getLines();
         if (sign.contains("leave")) {
           ArrayList<String> signLines = (ArrayList<String>)W.config
-            .getFile().getList(ConfigC.sign_LEAVE.location);
+            .getFile().getList(ConfigC.sign_LEAVE.fileKey);
           int linecount = 0;
           for (String line : signLines) {
             if (linecount <= 3)
@@ -117,7 +117,7 @@ public class SignsHandler {
         } 
         if (sign.contains("shop")) {
           ArrayList<String> signLines = (ArrayList<String>)W.config
-            .getFile().getList(ConfigC.sign_SHOP.location);
+            .getFile().getList(ConfigC.sign_SHOP.fileKey);
           int linecount = 0;
           for (String line : signLines) {
             if (linecount <= 3)
@@ -133,7 +133,7 @@ public class SignsHandler {
             if (arena.gameState.equals(Arena.ArenaState.WAITING)) {
               ArrayList<String> signLines = (ArrayList<String>)W.config
                 .getFile().getList(
-                  ConfigC.sign_WAITING.location);
+                  ConfigC.sign_WAITING.fileKey);
               int linecount = 0;
               if (signLines != null)
                 for (String line : signLines) {
@@ -160,7 +160,7 @@ public class SignsHandler {
               .equals(Arena.ArenaState.STARTING)) {
               ArrayList<String> signLines = (ArrayList<String>)W.config
                 .getFile().getList(
-                  ConfigC.sign_STARTING.location);
+                  ConfigC.sign_STARTING.fileKey);
               int linecount = 0;
               if (signLines != null)
                 for (String line : signLines) {
@@ -187,7 +187,7 @@ public class SignsHandler {
               .equals(Arena.ArenaState.INGAME)) {
               ArrayList<String> signLines = (ArrayList<String>)W.config
                 .getFile().getList(
-                  ConfigC.sign_INGAME.location);
+                  ConfigC.sign_INGAME.fileKey);
               int linecount = 0;
               if (signLines != null)
                 for (String line : signLines) {

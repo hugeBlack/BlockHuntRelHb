@@ -227,7 +227,7 @@ public class InventoryHandler {
             MessageM.replaceAll((String)W.config
               .get(ConfigC.shop_blockChooserv1Name)));
         lores = W.config.getFile().getStringList(
-            ConfigC.shop_blockChooserv1Description.location);
+            ConfigC.shop_blockChooserv1Description.fileKey);
         lores2 = new ArrayList<>();
         for (String lore : lores)
           lores2.add(MessageM.replaceAll(lore));
@@ -245,7 +245,7 @@ public class InventoryHandler {
             MessageM.replaceAll((String)W.config
               .get(ConfigC.shop_BlockHuntPassv2Name)));
         lores = W.config.getFile().getStringList(
-            ConfigC.shop_BlockHuntPassv2Description.location);
+            ConfigC.shop_BlockHuntPassv2Description.fileKey);
         lores2 = new ArrayList<>();
         for (String lore : lores)
           lores2.add(MessageM.replaceAll(lore));
@@ -258,7 +258,7 @@ public class InventoryHandler {
         if ((Boolean) W.config.get(ConfigC.shop_blockChooserv1Enabled))
           if (W.shop.getFile().get(
                   player.getName() + ".blockchooser") == null)
-            if (!PermissionsM.hasPerm(player, PermissionsC.Permissions.shopblockchooser,
+            if (!PermissionsM.hasPerm(player, PermissionsC.Permissions.shopBlockChooser,
                     Boolean.FALSE))
               shop.setItem(1, shopBlockChooser);   
         if ((Boolean) W.config.get(ConfigC.shop_BlockHuntPassv2Enabled))
@@ -287,7 +287,7 @@ public class InventoryHandler {
           MessageM.replaceAll((String)W.config
             .get(ConfigC.shop_blockChooserv1Name)));
       lores = W.config.getFile().getStringList(
-          ConfigC.shop_blockChooserv1Description.location);
+          ConfigC.shop_blockChooserv1Description.fileKey);
       lores2 = new ArrayList<>();
       for (String lore : lores)
         lores2.add(MessageM.replaceAll(lore));
@@ -304,7 +304,7 @@ public class InventoryHandler {
           MessageM.replaceAll((String)W.config
             .get(ConfigC.shop_BlockHuntPassv2Name)));
       lores = W.config.getFile().getStringList(
-          ConfigC.shop_BlockHuntPassv2Description.location);
+          ConfigC.shop_BlockHuntPassv2Description.fileKey);
       lores2 = new ArrayList<>();
       for (String lore : lores)
         lores2.add(MessageM.replaceAll(lore));
@@ -317,7 +317,7 @@ public class InventoryHandler {
       if ((Boolean) W.config.get(ConfigC.shop_blockChooserv1Enabled))
         if (W.shop.getFile().get(
                 player.getName() + ".blockchooser") == null)
-          if (!PermissionsM.hasPerm(player, PermissionsC.Permissions.shopblockchooser,
+          if (!PermissionsM.hasPerm(player, PermissionsC.Permissions.shopBlockChooser,
                   Boolean.FALSE))
             shop.setItem(1, shopBlockChooser);   
       if ((Boolean) W.config.get(ConfigC.shop_BlockHuntPassv2Enabled))

@@ -99,7 +99,7 @@ public class OnPlayerInteractEvent implements Listener {
                                     MessageM.replaceAll(W.config
                                             .getFile()
                                             .getStringList(
-                                                    ConfigC.sign_LEAVE.location)
+                                                    ConfigC.sign_LEAVE.fileKey)
                                             .get(1)))) {
                         if (PermissionsM.hasPerm(player,
                                 PermissionsC.Permissions.joinsign, Boolean.TRUE))
@@ -109,7 +109,7 @@ public class OnPlayerInteractEvent implements Listener {
                             MessageM.replaceAll(W.config
                                     .getFile()
                                     .getStringList(
-                                            ConfigC.sign_SHOP.location)
+                                            ConfigC.sign_SHOP.fileKey)
                                     .get(1), new String[0]))) {
                         if (PermissionsM.hasPerm(player,
                                 PermissionsC.Permissions.shop, Boolean.TRUE))

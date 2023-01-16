@@ -2,22 +2,23 @@ package nl.Steffion.BlockHunt;
 
 import java.util.*;
 
-import it.unimi.dsi.fastutil.Hash;
 import me.libraryaddict.disguise.DisguiseAPI;
-import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
 import me.libraryaddict.disguise.disguisetypes.MiscDisguise;
 import nl.Steffion.BlockHunt.Managers.MessageM;
+import nl.Steffion.BlockHunt.Managers.PermissionsM;
 import nl.Steffion.BlockHunt.Serializables.LocationSerializable;
 import nl.Steffion.BlockHunt.Serializables.M;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
 @SerializableAs("BlockHuntArena")
@@ -48,18 +49,22 @@ public class Arena implements ConfigurationSerializable {
     public int timer;
     public HashSet<Player> seekers;
     public Scoreboard scoreboard;
+    public HashMap<Player,Integer> seekerTime = new HashMap<>();
 
     public Arena(String arenaName, LocationSerializable pos1, LocationSerializable pos2, int maxPlayers, int minPlayers, int amountSeekersOnStart, int timeInLobbyUntilStart, int waitingTimeSeeker, int gameTime, int timeUntilHidersSword, ArrayList<ItemStack> disguiseBlocks, LocationSerializable lobbyWarp, LocationSerializable hidersWarp, LocationSerializable seekersWarp, LocationSerializable spawnWarp, List<String> seekersWinCommands, List<String> hidersWinCommands, List<String> allowedCommands, int seekersTokenWin, int hidersTokenWin, int killTokens, ArenaState gameState, int timer, Scoreboard scoreboard) {
         this.arenaName = arenaName;
-        double maxX = Math.max(pos1.getX(), pos2.getX());
-        double minX = Math.min(pos1.getX(), pos2.getX());
-        double maxY = Math.max(pos1.getY(), pos2.getY());
-        double minY = Math.min(pos1.getY(), pos2.getY());
-        double maxZ = Math.max(pos1.getZ(), pos2.getZ());
-        double minZ = Math.min(pos1.getZ(), pos2.getZ());
-        //pos1是xyz中小的，pos2是xyz中大的
-        this.pos1 = new Location(pos1.getWorld(),minX,minY,minZ);
-        this.pos2 = new Location(pos2.getWorld(),maxX,maxY,maxZ);;
+        if(pos1!=null && pos2!=null){
+            double maxX = Math.max(pos1.getX(), pos2.getX());
+            double minX = Math.min(pos1.getX(), pos2.getX());
+            double maxY = Math.max(pos1.getY(), pos2.getY());
+            double minY = Math.min(pos1.getY(), pos2.getY());
+            double maxZ = Math.max(pos1.getZ(), pos2.getZ());
+            double minZ = Math.min(pos1.getZ(), pos2.getZ());
+            //pos1是xyz中小的，pos2是xyz中大的
+            this.pos1 = new Location(pos1.getWorld(),minX,minY,minZ);
+            this.pos2 = new Location(pos2.getWorld(),maxX,maxY,maxZ);;
+        }
+
         this.maxPlayers = maxPlayers;
         this.minPlayers = minPlayers;
         this.amountSeekersOnStart = amountSeekersOnStart;
@@ -160,83 +165,60 @@ public class Arena implements ConfigurationSerializable {
         //处理倒计时应该显示的信息
         if (timer > 0) {
             if (timer == 60) {
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-60");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-60");
             } else if (timer == 30) {
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-30");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-30");
             } else if (timer == 10) {
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-10");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-10");
             } else if (timer == 5) {
                 for (Player pl : playersInArena)
                     pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.0F);
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-5");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-5");
             } else if (timer == 4) {
                 for (Player pl : playersInArena)
                     pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.0F);
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-4");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-4");
             } else if (timer == 3) {
                 for (Player pl : playersInArena)
                     pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-3");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-3");
             } else if (timer == 2) {
                 for (Player pl : playersInArena)
                     pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-2");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-2");
             } else if (timer == 1) {
                 for (Player pl : playersInArena)
                     pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 2.0F);
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-1");
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-1");
             }
         }
     }
 
     private void sendGameEndCountDownMsg() {
         if (timer == 190) {
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-190");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-190");
         } else if (timer == 60) {
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-60");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-60");
         } else if (timer == 30) {
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-30");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-30");
         } else if (timer == 10) {
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-10");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-10");
         } else if (timer == 5) {
             lobbyWarp.getWorld().playSound(lobbyWarp, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.0F);
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-5");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-5");
         } else if (timer == 4) {
             lobbyWarp.getWorld().playSound(lobbyWarp, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 0.0F);
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-4");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-4");
         } else if (timer == 3) {
             lobbyWarp.getWorld().playSound(lobbyWarp, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-3");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-3");
         } else if (timer == 2) {
             lobbyWarp.getWorld().playSound(lobbyWarp, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-2");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-2");
         } else if (timer == 1) {
             lobbyWarp.getWorld().playSound(lobbyWarp, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 2.0F);
-            ArenaHandler.sendFMessage(this, ConfigC.normal_ingameArenaEnd, "1-1");
+            sendArenaMessage(ConfigC.normal_ingameArenaEnd, "1-1");
         }
-    }
-
-    /**
-     * 用蓄水池抽样选取从list中随机选取数量最多为count个元素
-     */
-    private ArrayList<Player> reservoirSampling(Set<Player> list, int count) {
-        ArrayList<Player> ans = new ArrayList<>();
-        Iterator<Player> it = list.iterator();
-        for (int i = 0; i < count && it.hasNext(); i++) {
-            ans.add(it.next());
-        }
-        int elementsSeen = count;
-        int j;
-        while (it.hasNext()) {
-            elementsSeen++;
-            j = W.random.nextInt(elementsSeen);
-            if (j < count) {
-                ans.set(j, it.next());
-            } else {
-                it.next();
-            }
-        }
-        return ans;
     }
 
     /**
@@ -255,17 +237,17 @@ public class Arena implements ConfigurationSerializable {
             }
         }
         //最多选amount个
-        seekers.addAll(reservoirSampling(tmpSeekers, amountSeekersOnStart));
+        seekers.addAll(Helpers.reservoirSampling(tmpSeekers, amountSeekersOnStart));
         if (seekers.size() < amountSeekersOnStart) {
             //seekers不够
             if (tmpNeutral.size() + seekers.size() < amountSeekersOnStart) {
                 //seeker和neutral加起来还不都，则需要从hiders里调人，至少保证hider有1人
                 int playerNeed = amountSeekersOnStart - seekers.size() - tmpNeutral.size();
                 seekers.addAll(tmpNeutral);
-                seekers.addAll(reservoirSampling(tmpHiders, playerNeed < tmpHiders.size() ? playerNeed : tmpHiders.size() - 1));
+                seekers.addAll(Helpers.reservoirSampling(tmpHiders, playerNeed < tmpHiders.size() ? playerNeed : tmpHiders.size() - 1));
             } else {
                 //光neutral就够了
-                seekers.addAll(reservoirSampling(tmpNeutral, amountSeekersOnStart - seekers.size()));
+                seekers.addAll(Helpers.reservoirSampling(tmpNeutral, amountSeekersOnStart - seekers.size()));
             }
         }
     }
@@ -281,7 +263,9 @@ public class Arena implements ConfigurationSerializable {
         player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS, 1));
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0F, 1.0F);
     }
-
+    /**
+     * 初始化hider身上的物品，每局开始时调用
+     */
     private void setHiderInventory(Player player) {
         ItemStack sword = new ItemStack(Material.WOODEN_SWORD, 1);
         sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
@@ -297,17 +281,18 @@ public class Arena implements ConfigurationSerializable {
         gameState = ArenaState.INGAME;
         //gameTime置为一局的时间
         timer = gameTime;
-        ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaStarted, "secs-" + waitingTimeSeeker);
+        sendArenaMessage(ConfigC.normal_lobbyArenaStarted, "secs-" + waitingTimeSeeker);
         //选取玩家作为seekers
         assignTeam();
         for (Player nowPlayer : playersInArena) {
             nowPlayer.getInventory().clear();
             nowPlayer.updateInventory();
             if (seekers.contains(nowPlayer)) {
-                ArenaHandler.sendFMessage(this, ConfigC.normal_ingameSeekerChoosen, "seeker-" + nowPlayer.getName());
+                sendArenaMessage(ConfigC.normal_ingameSeekerChoosen, "seeker-" + nowPlayer.getName());
                 //将seeker传送走
                 nowPlayer.teleport(seekersWarp);
                 setSeekerInventory(nowPlayer);
+                seekerTime.put(nowPlayer,gameTime-waitingTimeSeeker);
             } else {
                 //将hider初始化
                 ItemStack block;
@@ -332,6 +317,269 @@ public class Arena implements ConfigurationSerializable {
     }
 
     /**
+     * 处理玩家被打死的情况,damager可以是null
+     */
+    public void playerAboutToDieHandler(Player player,Player damager){
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
+        //解除玩家伪装
+        DisguiseAPI.undisguiseToAll(player);
+        W.pBlock.remove(player);
+        if (!seekers.contains(player)) {
+            if(damager!=null){
+                //被杀死的玩家是hider，则给damager，也就是seeker加钱
+                if (W.shop.getFile().get(damager.getName() + ".tokens") == null) {
+                    W.shop.getFile().set(damager.getName() + ".tokens", 0);
+                    W.shop.save();
+                }
+                int damagerTokens = W.shop.getFile().getInt(damager.getName() + ".tokens");
+                W.shop.getFile().set(damager.getName() + ".tokens", damagerTokens + killTokens);
+                W.shop.save();
+                MessageM.sendFMessage(damager, ConfigC.normal_addedToken, "amount-" + killTokens);
+                if (W.shop.getFile().get(player.getName() + ".tokens") == null) {
+                    W.shop.getFile().set(player.getName() + ".tokens", 0);
+                    W.shop.save();
+                }
+            }
+            //按照剩余时间给hider加钱
+            int playerTokens = W.shop.getFile().getInt(player.getName() + ".tokens");
+            float addingTokens = hidersTokenWin - timer / gameTime * hidersTokenWin;
+            W.shop.getFile().set(player.getName() + ".tokens", playerTokens + (int) addingTokens);
+            W.shop.save();
+            MessageM.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + (int) addingTokens);
+            //被杀死的hider加入seeker阵营
+            seekers.add(player);
+            sendArenaMessage(ConfigC.normal_ingameHiderDied, "playername-" + player.getName(),
+                    "left-" + (playersInArena.size() - seekers.size()));
+        } else {
+            //seeker被杀死不给hider加钱
+            sendArenaMessage(ConfigC.normal_ingameSeekerDied, "playername-" + player.getName(), "secs-" + waitingTimeSeeker);
+        }
+        player.getInventory().clear();
+        //所有人都变成seeker则seeker获胜
+        if (seekers.size() >= playersInArena.size()) {
+            seekersWin();
+            return;
+        }
+        DisguiseAPI.undisguiseToAll(player);
+        //重置seeker冷却
+        seekerTime.put(player, timer-waitingTimeSeeker);
+        player.teleport(seekersWarp);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setWalkSpeed(0.25F);
+    }
+
+    /**
+     * 处理玩家中离开的情况
+     */
+    public void playerLeaveHandler(Player player, boolean message, boolean cleanup){
+        {
+            //需要对jjc内变量进行清理，对应的是玩家中途跑了的情况
+            if (cleanup) {
+                playersInArena.remove(player);
+                seekers.remove(player);
+                //等待中如果人不够就停止倒计时
+                if (playersInArena.size() < minPlayers && gameState.equals(Arena.ArenaState.STARTING)) {
+                    gameState = Arena.ArenaState.WAITING;
+                    timer = 0;
+                    sendArenaMessage(ConfigC.warning_lobbyNeedAtleast, "1-" + minPlayers);
+                }
+                //游戏中有一方
+                if(gameState == Arena.ArenaState.INGAME){
+                    if (playersInArena.size() <= 1 )
+                        if (seekers.size() >= playersInArena.size()) {
+                            seekersWin();
+                        } else {
+                            hidersWin();
+                        }
+                    //剩下的都是seekers了，则seeker赢
+                    if (seekers.size() >= playersInArena.size())
+                        seekersWin();
+                    //seeker跑光了，指定新的seeker
+                    if (seekers.size() == 0) {
+                        Iterator<Player> it = playersInArena.iterator();
+                        int playeri = W.random.nextInt(playersInArena.size());
+                        for (int i = 0; i < playeri - 1; i++) {
+                            it.next();
+                        }
+                        Player seeker = it.next();
+                        sendArenaMessage(ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
+                        sendArenaMessage(ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
+                        DisguiseAPI.undisguiseToAll(seeker);
+                        for (Player pl : Bukkit.getOnlinePlayers())
+                            pl.showPlayer(seeker);
+                        seeker.getInventory().clear();
+                        seekers.add(seeker);
+                        seeker.teleport(seekersWarp);
+                        seekerTime.put(seeker, timer-waitingTimeSeeker);
+                        seeker.setWalkSpeed(0.25F);
+                        for (Player otherplayer : playersInArena) {
+                            if (otherplayer.canSee(player))
+                                otherplayer.showPlayer(player);
+                            if (player.canSee(otherplayer))
+                                player.showPlayer(otherplayer);
+                        }
+                    }
+                }
+            }
+            PlayerArenaData pad = new PlayerArenaData();
+            if (W.pData.get(player) != null)
+                pad = W.pData.get(player);
+            player.getInventory().clear();
+            player.getInventory().setContents(pad.pInventory);
+            player.getInventory().setArmorContents(pad.pArmor);
+            player.updateInventory();
+            player.setExp(pad.pEXP);
+            player.setLevel(pad.pEXPL);
+            player.setHealth(pad.pHealth);
+            player.setFoodLevel(pad.pFood);
+            player.addPotionEffects(pad.pPotionEffects);
+            player.teleport(spawnWarp);
+            player.setGameMode(pad.pGameMode);
+            player.setAllowFlight(pad.pFlying);
+            if (player.getAllowFlight())
+                player.setFlying(true);
+            player.setWalkSpeed(0.2F);
+            W.pData.remove(player);
+            for (Player pl : Bukkit.getOnlinePlayers()) {
+                pl.showPlayer(player);
+                if (W.hiddenLoc.get(player) != null &&
+                        W.hiddenLocWater.get(player) != null) {
+                    Block pBlock = W.hiddenLoc.get(player).getBlock();
+                    if (W.hiddenLocWater.get(player)) {
+                        pl.sendBlockChange(pBlock.getLocation(), Material.WATER.createBlockData());
+                    } else {
+                        pl.sendBlockChange(pBlock.getLocation(), Material.AIR.createBlockData());
+                    }
+                }
+                DisguiseAPI.undisguiseToAll(player);
+            }
+            ScoreboardHandler.removeScoreboard(player);
+            MessageM.sendFMessage(player, ConfigC.normal_leaveYouLeft);
+            if (message)
+                sendArenaMessage(ConfigC.normal_leaveLeftArena, "playername-" + player.getName(), "1-" + playersInArena.size(), "2-" + maxPlayers);
+        }
+    }
+
+    /**
+     * 处理玩家加入jjc的情况
+     */
+    public void playerJoinHandler(Player player){
+        //jjc没有可用的隐藏方块也不行
+        if (disguiseBlocks.isEmpty()) {
+            MessageM.sendFMessage(player, ConfigC.error_joinNoBlocksSet);
+            return;
+        }
+        LocationSerializable zero = new LocationSerializable(Bukkit.getWorld(player.getWorld().getName()), 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+        //jjc的四个传送点要有，全零也不行
+        if (lobbyWarp == null || hidersWarp == null || seekersWarp == null || spawnWarp == null ||
+                (lobbyWarp.equals(zero) && hidersWarp.equals(zero) && seekersWarp.equals(zero) && spawnWarp.equals(zero))) {
+            MessageM.sendFMessage(player, ConfigC.error_joinWarpsNotSet);
+            return;
+        }
+        //还要jjc在等待或者即将开始的状态
+        if (gameState != Arena.ArenaState.WAITING && gameState != Arena.ArenaState.STARTING) {
+            MessageM.sendFMessage(player, ConfigC.error_joinArenaIngame);
+            return;
+        }
+        //人满了也不行
+        if (playersInArena.size() >= maxPlayers && !PermissionsM.hasPerm(player, PermissionsC.Permissions.joinfull, Boolean.FALSE)) {
+            MessageM.sendFMessage(player, ConfigC.error_joinFull);
+            return;
+        }
+        //条件都满足了，将玩家加入jjc
+        //保存物品栏
+        boolean inventoryempty = true;
+        for (ItemStack invItem : player.getInventory()) {
+            if (invItem != null &&
+                    invItem.getType() != Material.AIR)
+                inventoryempty = false;
+        }
+        byte b;
+        int i;
+        ItemStack[] arrayOfItemStack;
+        for (i = (arrayOfItemStack = player.getInventory().getArmorContents()).length, b = 0; b < i; ) {
+            ItemStack invitem = arrayOfItemStack[b];
+            if (invitem != null && invitem.getType() != Material.AIR)
+                inventoryempty = false;
+            b++;
+        }
+        if ((Boolean) W.config.get(ConfigC.requireInventoryClearOnJoin) && !inventoryempty) {
+            MessageM.sendFMessage(player, ConfigC.error_joinInventoryNotEmpty);
+            return;
+        }
+        //保存进入前状态
+        playersInArena.add(player);
+        PlayerArenaData pad = new PlayerArenaData(player.getLocation(),
+                player.getGameMode(), player.getInventory().getContents(),
+                player.getInventory().getArmorContents(), player.getExp(),
+                player.getLevel(), player.getHealth(), player.getFoodLevel(),
+                player.getActivePotionEffects(), player.getAllowFlight());
+        W.pData.put(player, pad);
+        //将玩家传送并清空物品，并设置初始状态
+        player.teleport(lobbyWarp);
+        player.setGameMode(GameMode.SURVIVAL);
+        for (PotionEffect pe : player.getActivePotionEffects())
+            player.removePotionEffect(pe.getType());
+        player.setFoodLevel(20);
+        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+        player.setLevel(timer);
+        player.setExp(0.0F);
+        player.getInventory().clear();
+        player.getInventory().setHelmet(new ItemStack(Material.AIR));
+        player.getInventory().setChestplate(new ItemStack(Material.AIR));
+        player.getInventory().setLeggings(new ItemStack(Material.AIR));
+        player.getInventory().setBoots(new ItemStack(Material.AIR));
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        player.setWalkSpeed(0.25F);
+        //让场内玩家可见
+        for (Player otherPlayer : playersInArena) {
+            if (otherPlayer.canSee(player))
+                otherPlayer.showPlayer(player);
+            if (player.canSee(otherPlayer))
+                player.showPlayer(otherPlayer);
+        }
+        DisguiseAPI.undisguiseToAll(player);
+        //给予blockChooser，需要检查是否启用，玩家是否购买或者直接就有权限
+        if ((Boolean) W.config.get(ConfigC.shop_blockChooserv1Enabled) && (
+                W.shop.getFile().get(player.getName() + ".blockchooser") != null ||
+                        PermissionsM.hasPerm(player, PermissionsC.Permissions.shopBlockHuntPass, Boolean.FALSE))) {
+            ItemStack shopBlockChooser = new ItemStack(Material.getMaterial((String) W.config.get(ConfigC.shop_blockChooserv1IDname)), 1);
+            ItemMeta shopBlockChooser_IM = shopBlockChooser.getItemMeta();
+            shopBlockChooser_IM.setDisplayName(MessageM.replaceAll((String) W.config.get(ConfigC.shop_blockChooserv1Name)));
+            List<String> lores = W.config.getFile().getStringList(ConfigC.shop_blockChooserv1Description.fileKey);
+            List<String> lores2 = new ArrayList<>();
+            for (String lore : lores)
+                lores2.add(MessageM.replaceAll(lore));
+            shopBlockChooser_IM.setLore(lores2);
+            shopBlockChooser.setItemMeta(shopBlockChooser_IM);
+            player.getInventory().addItem(shopBlockChooser);
+        }
+        //给予blockHuntPass，需要检查是否启用，玩家是否购买或者直接就有权限
+        int passCount = W.shop.getFile().getInt(player.getName() + ".blockhuntpass");
+        if ((Boolean) W.config.get(ConfigC.shop_BlockHuntPassv2Enabled) &&
+                (passCount != 0 || PermissionsM.hasPerm(player, PermissionsC.Permissions.shopBlockHuntPass, Boolean.FALSE))) {
+            ItemStack shopBlockHuntPass = new ItemStack(Material.getMaterial((String) W.config.get(ConfigC.shop_BlockHuntPassv2IDName)), 1);
+            ItemMeta shopBlockHuntPass_IM = shopBlockHuntPass.getItemMeta();
+            shopBlockHuntPass_IM.setDisplayName(MessageM.replaceAll((String) W.config.get(ConfigC.shop_BlockHuntPassv2Name)));
+            List<String> lores = W.config.getFile().getStringList(ConfigC.shop_BlockHuntPassv2Description.fileKey);
+            List<String> lores2 = new ArrayList<>();
+            for (String lore : lores)
+                lores2.add(MessageM.replaceAll(lore));
+            shopBlockHuntPass_IM.setLore(lores2);
+            shopBlockHuntPass.setItemMeta(shopBlockHuntPass_IM);
+            shopBlockHuntPass.setAmount(passCount==0?1:passCount);
+            player.getInventory().addItem(shopBlockHuntPass);
+        }
+        //提示新玩家加入
+        sendArenaMessage(ConfigC.normal_joinJoinedArena, "playername-" + player.getName(), "1-" + playersInArena.size(), "2-" + maxPlayers);
+        //提示还需要多少玩家
+        if (playersInArena.size() < minPlayers)
+            sendArenaMessage(ConfigC.warning_lobbyNeedAtleast, "1-" + minPlayers);
+    }
+    
+    /**
      * 每刻执行，处理jjc在每秒(20tick)需要做的事情
      */
     public void tick() {
@@ -340,7 +588,7 @@ public class Arena implements ConfigurationSerializable {
             if (playersInArena.size() >= minPlayers) {
                 gameState = ArenaState.STARTING;
                 timer = timeInLobbyUntilStart;
-                ArenaHandler.sendFMessage(this, ConfigC.normal_lobbyArenaIsStarting, "1-" + timeInLobbyUntilStart);
+                sendArenaMessage(ConfigC.normal_lobbyArenaIsStarting, "1-" + timeInLobbyUntilStart);
             }
         } else if (gameState == ArenaState.STARTING) {
             if (timer <= 0) {
@@ -351,11 +599,15 @@ public class Arena implements ConfigurationSerializable {
             }
         } else if (gameState == ArenaState.INGAME) {
             timer--;
-            //经过waitingTimeSeeker后放出seeker
-            if (timer == gameTime - waitingTimeSeeker) {
-                for (Player player : seekers) {
-                    player.teleport(hidersWarp);
-                    ArenaHandler.sendFMessage(this, ConfigC.normal_ingameSeekerSpawned, "playername-" + player.getName());
+            //到达seekerTimer所指定的时间时放出seeker，用迭代器实现
+            Iterator<Player> it = seekerTime.keySet().iterator();
+            Player nowPlayer;
+            while (it.hasNext()) {
+                nowPlayer = it.next();
+                if(timer==seekerTime.get(nowPlayer)){
+                    nowPlayer.teleport(hidersWarp);
+                    sendArenaMessage(ConfigC.normal_ingameSeekerSpawned, "playername-" + nowPlayer.getName());
+                    it.remove();
                 }
             }
             //经过timeUntilHidersSword后给hider装备
@@ -369,7 +621,7 @@ public class Arena implements ConfigurationSerializable {
             }
             sendGameEndCountDownMsg();
             if (timer <= 0) {
-                ArenaHandler.hidersWin(this);
+                hidersWin();
             }
             ScoreboardHandler.updateScoreboard(this);
             for (Player player : playersInArena) {
@@ -433,4 +685,93 @@ public class Arena implements ConfigurationSerializable {
         }
     }
 
+    public void seekersWin() {
+        sendArenaMessage(ConfigC.normal_winSeekers);
+        for (Player player : playersInArena) {
+            if (seekersWinCommands != null) {
+                for (String command : seekersWinCommands)
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", player.getName()));
+                if (W.config.getFile().getBoolean("vaultSupport")) {
+                    if (BlockHunt.econ != null) {
+                        BlockHunt.econ.depositPlayer(player.getName(), seekersTokenWin);
+                        MessageM.sendFMessage(player, ConfigC.normal_addedVaultBalance, "amount-" + seekersTokenWin);
+                    }
+                    continue;
+                }
+                if (W.shop.getFile().get(player.getName() + ".tokens") == null) {
+                    W.shop.getFile().set(player.getName() + ".tokens", 0);
+                    W.shop.save();
+                }
+                int playerTokens = W.shop.getFile().getInt(player.getName() + ".tokens");
+                W.shop.getFile().set(player.getName() + ".tokens", playerTokens + seekersTokenWin);
+                W.shop.save();
+                MessageM.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + seekersTokenWin);
+            }
+        }
+        cleanUp();
+    }
+
+    public void hidersWin() {
+        StringBuilder hidersLeft = new StringBuilder();
+        for (Player player : playersInArena) {
+            if (!seekers.contains(player))
+                hidersLeft.append(player.getName()).append(", ");
+        }
+        hidersLeft = new StringBuilder(hidersLeft.substring(0, hidersLeft.length() - 2));
+        sendArenaMessage(ConfigC.normal_winHiders, "names-" + hidersLeft);
+        for (Player player : playersInArena) {
+            if (seekers.contains(player) &&
+                    hidersWinCommands != null) {
+                for (String command : hidersWinCommands)
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+                            command.replaceAll("%player%", player.getName()));
+                if (W.config.getFile().getBoolean("vaultSupport")) {
+                    if (BlockHunt.econ != null && seekers.contains(player)) {
+                        BlockHunt.econ.depositPlayer(player.getName(), hidersTokenWin);
+                        MessageM.sendFMessage(player, ConfigC.normal_addedVaultBalance, "amount-" + hidersTokenWin);
+                    }
+                    continue;
+                }
+                if (W.shop.getFile().get(player.getName() + ".tokens") == null) {
+                    W.shop.getFile().set(player.getName() + ".tokens", 0);
+                    W.shop.save();
+                }
+                int playerTokens = W.shop.getFile().getInt(player.getName() + ".tokens");
+                W.shop.getFile().set(player.getName() + ".tokens", playerTokens + hidersTokenWin);
+                W.shop.save();
+                MessageM.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + hidersTokenWin);
+            }
+        }
+        cleanUp();
+    }
+    public void cleanUp() {
+        seekers.clear();
+        for (Player player : playersInArena) {
+            playerLeaveHandler(player, false, false);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
+        }
+        gameState = Arena.ArenaState.WAITING;
+        timer = 0;
+        playersInArena.clear();
+        seekers.clear();
+        seekerTime.clear();
+    }
+
+    /**
+     * 给jjc内的所有玩家发送消息
+     * @param key 在ComfigC中的枚举类的键值
+     * @param vars 参数
+     */
+    public void sendArenaMessage(ConfigC key, String... vars) {
+        for (Player player : playersInArena) {
+            String pMessage = key.config.getFile().get(key.fileKey).toString().replaceAll("%player%",
+                    player.getName());
+            player.sendMessage(MessageM.replaceAll(pMessage, vars));
+        }
+    }
+
+    public void stop() {
+        sendArenaMessage(ConfigC.warning_arenaStopped);
+        cleanUp();
+    }
 }

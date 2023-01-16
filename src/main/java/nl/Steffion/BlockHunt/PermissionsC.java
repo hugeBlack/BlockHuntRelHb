@@ -1,7 +1,7 @@
 package nl.Steffion.BlockHunt;
 
 public class PermissionsC {
-  public static String main = String.valueOf(BlockHunt.pdfFile.getName().toLowerCase()) + ".";
+  public static String main = BlockHunt.pdfFile.getName().toLowerCase() + ".";
   
   public enum PType {
     ALL, PLAYER, MODERATOR, ADMIN, OP;

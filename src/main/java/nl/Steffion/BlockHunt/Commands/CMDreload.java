@@ -1,16 +1,19 @@
 package nl.Steffion.BlockHunt.Commands;
 
-import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.ArenaHandler;
-import nl.Steffion.BlockHunt.ConfigC;
+import nl.Steffion.BlockHunt.*;
 import nl.Steffion.BlockHunt.Managers.ConfigM;
 import nl.Steffion.BlockHunt.Managers.MessageM;
-import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class CMDreload extends DefaultCMD {
-  public boolean exectue(Player player, Command cmd, String label, String[] args) {
+  public CMDreload(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
+    super(name, label, args, argsalias, permission, help, enabled, usage);
+  }
+
+  public boolean execute(Player player, Command cmd, String label, String[] args) {
     ConfigM.newFiles();
     W.config.load();
     W.messages.load();
@@ -18,7 +21,7 @@ public class CMDreload extends DefaultCMD {
     W.signs.load();
     W.shop.load();
     for (Arena arena : W.arenaList)
-      ArenaHandler.stopArena(arena); 
+      arena.stop();
     ArenaHandler.loadArenas();
     MessageM.sendFMessage(player, ConfigC.normal_reloadedConfigs, new String[0]);
     return true;

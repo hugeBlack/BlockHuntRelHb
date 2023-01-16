@@ -59,8 +59,8 @@ public class ConfigM {
     for (i = (arrayOfConfigC = ConfigC.values()).length, b = 0; b < i; ) {
       ConfigC value = arrayOfConfigC[b];
       value.config.load();
-      if (value.config.getFile().get(value.location) == null) {
-        value.config.getFile().set(value.location, value.value);
+      if (value.config.getFile().get(value.fileKey) == null) {
+        value.config.getFile().set(value.fileKey, value.value);
         value.config.save();
       } 
       b++;
@@ -105,6 +105,6 @@ public class ConfigM {
   }
   
   public Object get(ConfigC location) {
-    return getFile().get(location.location);
+    return getFile().get(location.fileKey);
   }
 }

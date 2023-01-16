@@ -1,18 +1,37 @@
 package nl.Steffion.BlockHunt.Commands;
 
-import nl.Steffion.BlockHunt.Managers.MessageM;
+import nl.Steffion.BlockHunt.ConfigC;
+import nl.Steffion.BlockHunt.PermissionsC;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class DefaultCMD {
-  public boolean exectue(Player player, Command cmd, String label, String[] args) {
-    MessageM.sendMessage(player, "%TAG%NExample of a Command!", new String[0]);
-    return true;
-  }
+import java.util.List;
+
+public abstract class DefaultCMD {
+    public String name;
+    public String label;
+    public String args;
+    public String argsAlias;
+    public PermissionsC.Permissions permission;
+    public ConfigC help;
+    public boolean enabled;
+    public String usage;
+
+    public DefaultCMD(String name, String label, String args, String argsAlias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
+        this.name = name;
+        this.label = label;
+        this.args = args;
+        this.argsAlias = argsAlias;
+        this.permission = permission;
+        this.help = help;
+        this.enabled = enabled;
+        this.usage = usage;
+    }
+
+    public abstract boolean execute(Player player, Command cmd, String label, String[] args);
+
+    public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
+        return null;
+    }
 }
-
-
-/* Location:              E:\minecraft\hideandSeek\plugins\BlockHuntRel-1.18.2.jar!\nl\Steffion\BlockHunt\Commands\DefaultCMD.class
- * Java compiler version: 17 (61.0)
- * JD-Core Version:       1.1.3
- */
