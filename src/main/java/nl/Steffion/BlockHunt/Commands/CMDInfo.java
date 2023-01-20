@@ -8,10 +8,8 @@ import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class CMDinfo extends DefaultCMD {
-  public CMDinfo() {
+public class CMDInfo extends DefaultCMD {
+  public CMDInfo() {
     super("info", "i", PermissionsC.Permissions.info, ConfigC.help_info, (Boolean) W.config.get(ConfigC.commandEnabled_info), "/BlockHunt [info|i]");
   }
 

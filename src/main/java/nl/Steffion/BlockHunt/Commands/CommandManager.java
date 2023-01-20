@@ -23,22 +23,23 @@ public class CommandManager implements CommandExecutor {
     }
 
     static  {
-        registerCMD(new CMDinfo());
-        commandHelp = new CMDhelp();
+        registerCMD(new CMDInfo());
+        commandHelp = new CMDHelp();
         registerCMD(commandHelp);
-        registerCMD(new CMDreload());
-        registerCMD(new CMDjoin());
-        registerCMD(new CMDleave());
-        registerCMD(new CMDlist());
-        registerCMD(new CMDshop());
-        registerCMD(new CMDstart());
+        registerCMD(new CMDReload());
+        registerCMD(new CMDJoin());
+        registerCMD(new CMDLeave());
+        registerCMD(new CMDList());
+        registerCMD(new CMDShop());
+        registerCMD(new CMDStart());
         if (W.config.getFile().getBoolean("wandEnabled"))
-            registerCMD(new CMDwand());
-        registerCMD(new CMDcreate());
-        registerCMD(new CMDset());
-        registerCMD(new CMDsetwarp());
-        registerCMD(new CMDremove());
-        registerCMD(new CMDtokens());
+            registerCMD(new CMDWand());
+        registerCMD(new CMDCreate());
+        registerCMD(new CMDSet());
+        registerCMD(new CMDSetWarp());
+        registerCMD(new CMDRemove());
+        registerCMD(new CMDTokens());
+        registerCMD(new CMDKit());
     }
 
     @Override

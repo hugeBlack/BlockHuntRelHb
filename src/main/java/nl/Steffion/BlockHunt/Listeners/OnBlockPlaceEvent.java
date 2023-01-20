@@ -12,9 +12,6 @@ public class OnBlockPlaceEvent implements Listener {
   @EventHandler(priority = EventPriority.NORMAL)
   public void onBlockPlaceEvent(BlockPlaceEvent event) {
     Player player = event.getPlayer();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player))
-        event.setCancelled(true); 
-    } 
+    if(W.playerArenaMap.containsKey(player)) event.setCancelled(true);
   }
 }

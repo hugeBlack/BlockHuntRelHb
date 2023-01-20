@@ -1,6 +1,8 @@
 package nl.Steffion.BlockHunt;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
 import nl.Steffion.BlockHunt.Managers.MessageM;
 import nl.Steffion.BlockHunt.Serializables.LocationSerializable;
 import org.bukkit.Location;
@@ -47,14 +49,9 @@ public class SignsHandler {
           if (lines[1].equals(arena.arenaName)) {
             int number = 1;
             while (!saved) {
-              if (W.signs.getFile().get(
-                  String.valueOf(arena.arenaName) + "_" + number) == null) {
-                W.signs.getFile().set(
-                    String.valueOf(arena.arenaName) + "_" + number + 
-                    ".arenaName", lines[1]);
-                W.signs.getFile().set(
-                    String.valueOf(arena.arenaName) + "_" + number + 
-                    ".location", location);
+              if (W.signs.getFile().get(arena.arenaName + "_" + number) == null) {
+                W.signs.getFile().set(arena.arenaName + "_" + number + ".arenaName", lines[1]);
+                W.signs.getFile().set(arena.arenaName + "_" + number + ".location", location);
                 W.signs.save();
                 saved = true;
                 continue;
@@ -72,8 +69,7 @@ public class SignsHandler {
   public static void removeSign(LocationSerializable location) {
     for (String sign : W.signs.getFile().getKeys(false)) {
       LocationSerializable loc = new LocationSerializable(
-          (Location)W.signs.getFile().get(
-            String.valueOf(sign) + ".location"));
+          (Location) Objects.requireNonNull(W.signs.getFile().get(sign + ".location")));
       if (loc.equals(location)) {
         W.signs.getFile().set(sign, null);
         W.signs.save();
@@ -84,8 +80,7 @@ public class SignsHandler {
   public static boolean isSign(LocationSerializable location) {
     for (String sign : W.signs.getFile().getKeys(false)) {
       LocationSerializable loc = new LocationSerializable(
-          (Location)W.signs.getFile().get(
-            String.valueOf(sign) + ".location"));
+          (Location)W.signs.getFile().get(String.valueOf(sign) + ".location"));
       if (loc.equals(location))
         return true; 
     } 
@@ -142,15 +137,15 @@ public class SignsHandler {
                       .setLine(
                         linecount, 
                         MessageM.replaceAll(
-                          line, new String[] { "arenaname-" + 
-                            arena.arenaName, 
-                            "players-" + 
-                            arena.playersInArena
-                            .size(), 
-                            "maxplayers-" + 
-                            arena.maxPlayers, 
-                            "timeleft-" + 
-                            arena.timer })); 
+                          line, "arenaname-" +
+                            arena.arenaName,
+                                "players-" +
+                                arena.playersInArena
+                                .size(),
+                                "maxplayers-" +
+                                arena.maxPlayers,
+                                "timeleft-" +
+                                arena.timer));
                   linecount++;
                 }  
               signblock.update();

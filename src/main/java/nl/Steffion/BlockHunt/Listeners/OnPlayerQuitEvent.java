@@ -10,12 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class OnPlayerQuitEvent implements Listener {
-  @EventHandler(priority = EventPriority.NORMAL)
-  public void onPlayerQuitEvent(PlayerQuitEvent event) {
-    Player player = event.getPlayer();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player))
-        ArenaHandler.playerLeaveArena(player, true, true); 
-    } 
-  }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Arena arena = W.playerArenaMap.get(player);
+        if (arena != null)
+            ArenaHandler.playerLeaveArena(player, true, true);
+    }
 }

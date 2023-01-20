@@ -14,8 +14,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CMDhelp extends DefaultCMD {
-    public CMDhelp() {
+public class CMDHelp extends DefaultCMD {
+    public CMDHelp() {
         super("help", "h", PermissionsC.Permissions.help, ConfigC.help_help, (Boolean) W.config.get(ConfigC.commandEnabled_help), "/BlockHunt <help|h> [page number]");
     }
 

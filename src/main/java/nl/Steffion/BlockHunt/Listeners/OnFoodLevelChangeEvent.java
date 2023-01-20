@@ -12,9 +12,6 @@ public class OnFoodLevelChangeEvent implements Listener {
   @EventHandler(priority = EventPriority.NORMAL)
   public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
     Player player = (Player)event.getEntity();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player))
-        event.setCancelled(true); 
-    } 
+    if(W.playerArenaMap.containsKey(player)) event.setCancelled(true);
   }
 }

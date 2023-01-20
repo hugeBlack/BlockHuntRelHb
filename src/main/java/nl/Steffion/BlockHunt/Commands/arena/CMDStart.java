@@ -9,10 +9,10 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class CMDstart extends DefaultCMD {
+public class CMDStart extends DefaultCMD {
 
 
-    public CMDstart() {
+    public CMDStart() {
         super("start", "go", PermissionsC.Permissions.start, ConfigC.help_start, (Boolean) W.config.get(ConfigC.commandEnabled_start), "/BlockHunt <start|go> <arenaname>");
     }
 
@@ -21,11 +21,7 @@ public class CMDstart extends DefaultCMD {
             if (args.length <= 1) {
                 MessageM.sendFMessage(player, ConfigC.error_notEnoughArguments, "syntax-" + usage);
             } else {
-                Arena arena = null;
-                for (Arena arena2 : W.arenaList) {
-                    if (arena2.arenaName.equalsIgnoreCase(args[1]))
-                        arena = arena2;
-                }
+                Arena arena = ArenaHandler.getArenaByName(args[1]);
                 if (arena != null) {
                     if (arena.gameState.equals(Arena.ArenaState.WAITING)) {
                         if (arena.playersInArena.size() >= 2) {
@@ -56,7 +52,7 @@ public class CMDstart extends DefaultCMD {
     }
     @Override
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length==2) return Helpers.listArenas();
+        if(args.length==2) return ArenaHandler.getArenaNames();
         return null;
     }
 }

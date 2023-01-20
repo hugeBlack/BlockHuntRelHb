@@ -1,14 +1,10 @@
 package nl.Steffion.BlockHunt.Listeners;
 
-import nl.Steffion.BlockHunt.Arena;
-import nl.Steffion.BlockHunt.ArenaHandler;
-import nl.Steffion.BlockHunt.BlockHunt;
-import nl.Steffion.BlockHunt.ConfigC;
-import nl.Steffion.BlockHunt.InventoryHandler;
+import nl.Steffion.BlockHunt.*;
 import nl.Steffion.BlockHunt.Managers.MessageM;
-import nl.Steffion.BlockHunt.W;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,18 +13,20 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class OnInventoryClickEvent implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onInventoryClickEvent(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
         Player player = (Player) event.getWhoClicked();
-        for (Arena arena : W.arenaList) {
-            if (arena.playersInArena.contains(player) && !arena.seekers.contains(player) && (event.getSlot() == 8 || event.getSlot() == 39))
+        if(W.playerArenaMap.containsKey(player) && W.playerArenaMap.get(player).seekers.contains(player))
+            if ((event.getSlot() == 8 || event.getSlot() == 39))
                 event.setCancelled(true);
-        }
+
         Inventory inv = event.getInventory();
         //判断物品栏是虚拟的
         if (inv.getType().equals(InventoryType.CHEST) && inv.getHolder() == null) {
@@ -44,12 +42,17 @@ public class OnInventoryClickEvent implements Listener {
             //认为$r开头的可能是其他界面
             if (event.getView().getTitle().startsWith("§r")) {
                 event.setCancelled(true);
+                BlockHunt.plugin.getLogger().log(Level.WARNING,event.getView().getTitle());
                 if (event.getView().getTitle().equals(MessageM.replaceAll("§r" + W.config.get(ConfigC.shop_title))))
                     ShopHandler(event);
                 else if (event.getView().getTitle().contains(MessageM.replaceAll((String) W.config.get(ConfigC.shop_BlockHuntPassv2Name))))
                     BlockHuntPassHandler(event);
                 else if (event.getView().getTitle().contains(MessageM.replaceAll((String) W.config.get(ConfigC.shop_blockChooserv1Name))))
                     BlockChooserHandler(event);
+                else if (event.getView().getTitle().contains(MessageM.replaceAll((String) W.config.get(ConfigC.shop_KitSelectorSeekerName))))
+                    KitMenuHandler(event);
+                else if (event.getView().getTitle().contains(MessageM.replaceAll((String) W.config.get(ConfigC.shop_KitSelectorHiderName))))
+                    KitMenuHandler(event);
                 else
                     ArenaManageHandler(event);
             }
@@ -149,13 +152,7 @@ public class OnInventoryClickEvent implements Listener {
         Inventory inv = event.getClickedInventory();
         Player player = (Player) event.getWhoClicked();
         int i = 0;
-        Arena nowArena = null;
-        //先找到玩家所处的竞技场
-        for (Arena arena : W.arenaList)
-            if (arena.playersInArena.contains(player)) {
-                nowArena = arena;
-                break;
-            }
+        Arena nowArena = W.playerArenaMap.get(player);
         //玩家不在竞技场就关闭菜单
         if (nowArena == null) {
             inv.clear();
@@ -165,48 +162,37 @@ public class OnInventoryClickEvent implements Listener {
         if (event.getCurrentItem().getType() == Material.BLUE_WOOL) {
             //点击hiders物品，蓝色羊毛
             //已经是hider就直接返回
-            if (W.choosenSeeker.containsKey(player) && !W.choosenSeeker.get(player)){
+            if (W.chosenSeeker.containsKey(player) && !W.chosenSeeker.get(player)){
                 MessageM.sendFMessage(player, ConfigC.normal_shopAlreadyHiders);
                 return;
             }
             //满足条件，可以加入hiders阵营
-            W.choosenSeeker.put(player, Boolean.FALSE);
+            W.chosenSeeker.put(player, Boolean.FALSE);
             MessageM.sendFMessage(player, ConfigC.normal_shopChoosenHiders);
         } else if (event.getCurrentItem().getType() == Material.RED_WOOL) {
             //点击seekers物品，红色羊毛
             //已经是seeker就直接返回
-            if (W.choosenSeeker.containsKey(player) && W.choosenSeeker.get(player)){
+            if (W.chosenSeeker.containsKey(player) && W.chosenSeeker.get(player)){
                 MessageM.sendFMessage(player, ConfigC.normal_shopAlreadySeeker);
                 return;
             }
             //满足条件，可以加入seeker阵营
-            W.choosenSeeker.put(player, Boolean.TRUE);
+            W.chosenSeeker.put(player, Boolean.TRUE);
             MessageM.sendFMessage(player, ConfigC.normal_shopChoosenSeeker);
         } else if (event.getCurrentItem().getType() == Material.WHITE_WOOL){
             //选择中立状态
-            W.choosenSeeker.remove(player);
+            W.chosenSeeker.remove(player);
             MessageM.sendFMessage(player, ConfigC.normal_shopChooseCancel);
         }
         player.closeInventory();
         /*if (isPassUsed) {
             //扫尾，扣掉一张pass
             inv.clear();
-            if (W.shop.getFile()
-                    .getInt(player.getName() +
-                            ".blockhuntpass") == 1) {
-                W.shop.getFile().set(
-                        player.getName() +
-                                ".blockhuntpass",
-                        null);
+            if (W.shop.getFile().getInt(player.getName() + ".blockhuntpass") == 1) {
+                W.shop.getFile().set(player.getName() + ".blockhuntpass", null);
                 W.shop.save();
             }
-            W.shop.getFile()
-                    .set(player.getName() +
-                                    ".blockhuntpass",
-                            W.shop.getFile()
-                                    .getInt(
-                                            player.getName() +
-                                                    ".blockhuntpass") - 1);
+            W.shop.getFile().set(player.getName() + ".blockhuntpass",  W.shop.getFile().getInt(player.getName() + ".blockhuntpass") - 1);
             W.shop.save();
         }*/
 
@@ -298,7 +284,7 @@ public class OnInventoryClickEvent implements Listener {
         Player player = (Player) event.getWhoClicked();
         if (event.getCurrentItem().getType() != Material.AIR)
             if (event.getCurrentItem().getType().isBlock()) {
-                W.choosenBlock.put(player, event.getCurrentItem());
+                W.chosenBlock.put(player, event.getCurrentItem());
                 MessageM.sendFMessage(player,
                         ConfigC.normal_shopChoosenBlock, "block-" +
                                 event.getCurrentItem().getType()
@@ -319,17 +305,8 @@ public class OnInventoryClickEvent implements Listener {
         Inventory inv = event.getClickedInventory();
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
-        String arenaName = Objects.requireNonNull(inv
-                        .getItem(0))
-                .getItemMeta()
-                .getDisplayName()
-                .replaceAll(
-                        MessageM.replaceAll("%NSettings of arena: %A"), "");
-        Arena arena = null;
-        for (Arena arena2 : W.arenaList) {
-            if (arena2.arenaName.equalsIgnoreCase(arenaName))
-                arena = arena2;
-        }
+        String arenaName = Objects.requireNonNull(inv.getItem(0)).getItemMeta().getDisplayName().replaceAll(MessageM.replaceAll("%NSettings of arena: %A"), "");
+        Arena arena = ArenaHandler.getArenaByName(arenaName);
         if (item == null || arena == null)
             return;
         if (item.getType().equals(Material.AIR))
@@ -395,6 +372,29 @@ public class OnInventoryClickEvent implements Listener {
                 item.getItemMeta().getDisplayName()
                         .contains("disguiseBlocks")) {
             InventoryHandler.openDisguiseBlocks(arena, player);
+        }
+    }
+
+    /**
+     * 处理点击kit面板界面的情况
+     */
+    private void KitMenuHandler(InventoryClickEvent event){
+        Inventory inv = event.getClickedInventory();
+        Player player = (Player) event.getWhoClicked();
+        ItemStack item = event.getCurrentItem();
+        String itemId = item.getItemMeta().getPersistentDataContainer().get(KitHandler.kitMenuIconKey, PersistentDataType.STRING);
+        Kit kit;
+        if(itemId==null || (kit = KitHandler.kitMap.get(itemId))==null){
+            player.closeInventory();
+            BlockHunt.plugin.getLogger().log(Level.INFO,itemId);
+            return;
+        }
+        if(kit.isSeekerKit) {
+            W.playerSeekerKitMap.put(player, kit);
+            MessageM.sendFMessage(player, ConfigC.normal_kitSelectedSeeker, "name-" + kit.name);
+        }else {
+            W.playerHiderKitMap.put(player, kit);
+            MessageM.sendFMessage(player, ConfigC.normal_kitSelectedHider, "name-" + kit.name);
         }
     }
 }

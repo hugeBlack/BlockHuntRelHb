@@ -15,21 +15,19 @@ public class OnPlayerMoveEvent implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        for (Arena arena : W.arenaList) {
-            if (arena.playersInArena.contains(player) &&
-                    arena.gameState == Arena.ArenaState.INGAME) {
-                W.moveLoc.put(player, player.getLocation());
-                if (!W.config.getFile().getBoolean("wandEnabled"))
-                    continue;
-                Location loc = player.getLocation();
-                if (!arena.isLocationInArena(loc)) {
-                    event.setCancelled(true);
-                    player.playEffect(loc, Effect.ENDER_SIGNAL, null);
-                    player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
-                    player.teleport(arena.hidersWarp);
-                    continue;
-                }
+        Arena arena = W.playerArenaMap.get(player);
+        if (arena != null && arena.playersInArena.contains(player) && arena.gameState == Arena.ArenaState.INGAME) {
+            W.moveLoc.put(player, player.getLocation());
+            if (!W.config.getFile().getBoolean("wandEnabled"))
+                return;
+            Location loc = player.getLocation();
+            if (!arena.isLocationInArena(loc)) {
+                event.setCancelled(true);
+                player.playEffect(loc, Effect.ENDER_SIGNAL, null);
+                player.playSound(loc, Sound.ENTITY_GHAST_SHOOT, 1.0F, 1.0F);
+                player.teleport(arena.hidersWarp);
             }
         }
+
     }
 }

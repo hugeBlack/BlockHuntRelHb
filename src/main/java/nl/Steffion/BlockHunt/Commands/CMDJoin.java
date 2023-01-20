@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class CMDjoin extends DefaultCMD {
-    public CMDjoin() {
+public class CMDJoin extends DefaultCMD {
+    public CMDJoin() {
         super("join", "j", PermissionsC.Permissions.join, ConfigC.help_join, (Boolean) W.config.get(ConfigC.commandEnabled_join), "/BlockHunt <join|j> <arenaname>");
     }
 
@@ -28,7 +28,7 @@ public class CMDjoin extends DefaultCMD {
 
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
         if(args.length==2)
-            return Helpers.listArenas();
+            return ArenaHandler.getArenaNames();
         else
             return null;
     }

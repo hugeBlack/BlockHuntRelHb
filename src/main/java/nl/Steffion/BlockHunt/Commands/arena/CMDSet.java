@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class CMDset extends DefaultCMD {
-    public CMDset() {
+public class CMDSet extends DefaultCMD {
+    public CMDSet() {
         super("set", "s", PermissionsC.Permissions.set, ConfigC.help_set, (Boolean) W.config.get(ConfigC.commandEnabled_set), "/BlockHunt <set|s> <arenaname>");
     }
 
@@ -30,7 +30,7 @@ public class CMDset extends DefaultCMD {
 
     @Override
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length==2) return Helpers.listArenas();
+        if(args.length==2) return ArenaHandler.getArenaNames();
         return null;
     }
 }

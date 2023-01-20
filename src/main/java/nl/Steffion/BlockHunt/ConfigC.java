@@ -50,9 +50,14 @@ public enum ConfigC {
       "%ARight-Click%N in the lobby and choose", 
       "%Nthe block you want to be!", "&6Unlimited uses." }, W.config),
   shop_BlockHuntPassv2Enabled(Boolean.TRUE, W.config),
+  shop_KitEnabled(Boolean.TRUE, W.config),
   shop_BlockHuntPassv2IDName("NAME_TAG", W.config),
+  shop_KitSelectorHiderIdName("PAPER",W.config),
+  shop_KitSelectorSeekerIdName("MAP",W.config),
   shop_BlockHuntPassv2Price(150, W.config),
   shop_BlockHuntPassv2Name("%H&lBlockHunt Pass", W.config),
+  shop_KitSelectorSeekerName("%H&lSeeker Kit Selector", W.config),
+  shop_KitSelectorHiderName("%H&lHider Kit Selector", W.config),
   shop_BlockHuntPassv2Description(new String[] { "%NUse this item before the arena starts.", 
       "%ARight-Click%N in the lobby and choose", 
       "%Nif you want to be a Hider or a Seeker!", "&61 time use." }, W.config),
@@ -164,7 +169,17 @@ public enum ConfigC {
   error_tokensUnknownsetting("%TAG%E'%A%option%%E' is not a known option!", W.messages),
   error_shopNeedMoreTokens("%TAG%EYou need more tokens before you can buy this item.", W.messages),
   error_shopNeedMoreMoney("%TAG%EYou don't have enough money to do this", W.messages),
-  error_trueVaultNull("%TAG%EVault has been enabled in the config.yml but cannot find the 'Vault' plugin! The plugin will not run", W.messages);
+  error_trueVaultNull("%TAG%EVault has been enabled in the config.yml but cannot find the 'Vault' plugin! The plugin will not run", W.messages),
+
+  //kit area
+  normal_kitCreated("%TAG%NKit %A%name%%N created. Items in your inventory are saved as kit content.", W.messages),
+  error_kitAlreadyExist("%TAG%EKit %A%name%%E already exists.", W.messages),
+  error_kitDoNotExist("%TAG%EKit %A%name%%E does not exist.", W.messages),
+  normal_kitLoaded("%TAG%NKit %A%name%%N loaded to your inventory.", W.messages),
+  normal_kitUpdated("%TAG%NKit %A%name%%N updated.", W.messages),
+  error_kitOperationNotAvailable("%TAG%EKit operation %A%name%%E not available.", W.messages),
+  normal_kitSelectedSeeker("%TAG%NSeeker kit %A%name%%N selected.", W.messages),
+  normal_kitSelectedHider("%TAG%NHider kit %A%name%%N selected.", W.messages);
   
   public Object value;
   

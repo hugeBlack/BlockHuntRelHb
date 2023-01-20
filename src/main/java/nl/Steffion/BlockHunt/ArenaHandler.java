@@ -2,6 +2,7 @@ package nl.Steffion.BlockHunt;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.libraryaddict.disguise.DisguiseAPI;
@@ -30,21 +31,10 @@ public class ArenaHandler {
             ScoreboardHandler.createScoreboard(arena);
     }
 
-    public static void playerJoinArena(Player player, String arenaName) {
-        Arena arena = null;
-        //玩家已经在jjc的话需要退出，顺便找到要加入的jjc
-        for (Arena nowArena : W.arenaList) {
-            if (nowArena.arenaName.equalsIgnoreCase(arenaName)) {
-                arena = nowArena;
-            }
-            if (nowArena.playersInArena != null && nowArena.playersInArena.contains(player)) {
-                MessageM.sendFMessage(player, ConfigC.error_joinAlreadyJoined);
-                return;
-            }
-        }
-        //jjc找不到，提示并return
-        if (arena == null) {
-            MessageM.sendFMessage(player, ConfigC.error_noArena, "name-" + arenaName);
+    public static void playerJoinArena(Player player, Arena arena) {
+        //玩家已经在jjc的话需要退出
+        if(W.playerArenaMap.containsKey(player)){
+            MessageM.sendFMessage(player, ConfigC.error_joinAlreadyJoined);
             return;
         }
         //找到jjc，交给jjc处理
@@ -52,13 +42,23 @@ public class ArenaHandler {
         //更新牌子
         SignsHandler.updateSigns();
     }
+    public static void playerJoinArena(Player player, String arenaName) {
+        //玩家已经在jjc的话需要退出
+        if(W.playerArenaMap.containsKey(player)){
+            MessageM.sendFMessage(player, ConfigC.error_joinAlreadyJoined);
+            return;
+        }
+        Arena arena = getArenaByName(arenaName);
+        //jjc找不到，提示并return
+        if (arena == null) {
+            MessageM.sendFMessage(player, ConfigC.error_noArena, "name-" + arena.arenaName);
+            return;
+        }
+        playerJoinArena(player,arena);
+    }
 
     public static void playerLeaveArena(Player player, boolean message, boolean cleanup) {
-        Arena arena = null;
-        for (Arena arena2 : W.arenaList) {
-            if (arena2.playersInArena != null && arena2.playersInArena.contains(player))
-                arena = arena2;
-        }
+        Arena arena = W.playerArenaMap.get(player);
         if (arena != null)
             //找到jjc，交给jjc处理
             arena.playerLeaveHandler(player,message,cleanup);
@@ -76,11 +76,28 @@ public class ArenaHandler {
         }
     }
 
+    /**
+     * 获取所有jjc的名称
+     * @return jjc名称链表
+     */
     public static List<String> getArenaNames(){
-        List<String> response = new ArrayList<>();
+        LinkedList<String> ans = new LinkedList<>();
         for(Arena arena:W.arenaList){
-            response.add(arena.arenaName);
+            ans.add(arena.arenaName);
         }
-        return response;
+        return ans;
+    }
+
+    /**
+     * 通过arenaName查找对应的jjc
+     * @param arenaName 要查找的jjc名称，忽略大小写
+     * @return jjc实例或者null
+     */
+    public static Arena getArenaByName(String arenaName){
+        for (Arena arena2 : W.arenaList) {
+            if (arena2.arenaName.equalsIgnoreCase(arenaName))
+                return arena2;
+        }
+        return null;
     }
 }

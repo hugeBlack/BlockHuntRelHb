@@ -19,6 +19,7 @@ public class PermissionsC {
     shop("shop", PermissionsC.PType.PLAYER),
     shopBlockChooser("shop.blockchooser", PermissionsC.PType.ADMIN),
     shopBlockHuntPass("shop.blockhuntpass", PermissionsC.PType.ADMIN),
+    shopKitSelector("shop.kitselector", PermissionsC.PType.ADMIN),
     start("start", PermissionsC.PType.MODERATOR),
     create("create", PermissionsC.PType.ADMIN),
     set("set", PermissionsC.PType.MODERATOR),

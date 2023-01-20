@@ -15,11 +15,9 @@ public class OnEntityDamageEvent implements Listener {
         Entity ent = event.getEntity();
         if (ent instanceof Player) {
             Player player = (Player) event.getEntity();
-            for (Arena arena : W.arenaList) {
               //玩家只能受到虚空或者其他玩家的伤害
-                if (arena.playersInArena.contains(player) && !(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.VOID))
+            if (W.playerArenaMap.containsKey(player) && !(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.VOID))
                 event.setCancelled(true);
             }
-        }
     }
 }

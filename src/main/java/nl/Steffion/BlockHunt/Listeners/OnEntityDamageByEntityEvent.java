@@ -28,12 +28,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
             damager = (Player) event.getDamager();
         //damager和damagee都要存在
         if (player == null) return;
-        Arena arena = null;
-        for (Arena nowArena : W.arenaList) {
-            if (nowArena.playersInArena.contains(player)) {
-                arena = nowArena;
-            }
-        }
+        Arena arena = W.playerArenaMap.get(player);
         //玩家在竞技场中
         if (arena == null) return;
         //jjc还没开始，不能造成伤害

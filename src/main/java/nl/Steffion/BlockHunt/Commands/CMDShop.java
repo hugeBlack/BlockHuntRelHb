@@ -7,10 +7,8 @@ import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class CMDshop extends DefaultCMD {
-    public CMDshop() {
+public class CMDShop extends DefaultCMD {
+    public CMDShop() {
         super("shop", "sh", PermissionsC.Permissions.shop, ConfigC.help_shop, (Boolean) W.config.get(ConfigC.commandEnabled_shop), "/BlockHunt <shop|sh>");
     }
 

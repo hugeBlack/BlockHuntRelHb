@@ -74,6 +74,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
       //</editor-fold>
         ConfigurationSerialization.registerClass(Arena.class);
         ArenaHandler.loadArenas();
+        KitHandler.loadKits();
         //<editor-fold desc="发送统计信息">
         /*Bukkit.getScheduler().runTaskTimer(this, () -> {
             try {
@@ -129,9 +130,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
     public void onDisable() {
         for (Arena arena : W.arenaList)
             arena.stop();
-        MessageM.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" +
-                pdfFile.getName(),
-                "version-" + pdfFile.getVersion(), "autors-" + pdfFile.getAuthors().get(0));
+        MessageM.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" + pdfFile.getName(), "version-" + pdfFile.getVersion(), "autors-" + pdfFile.getAuthors().get(0));
     }
 
     public static String stringBuilder(String[] input, int startArg) {

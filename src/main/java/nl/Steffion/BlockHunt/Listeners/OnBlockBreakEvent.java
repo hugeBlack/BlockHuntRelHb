@@ -15,10 +15,7 @@ public class OnBlockBreakEvent implements Listener {
   @EventHandler(priority = EventPriority.NORMAL)
   public void onBlockBreakEvent(BlockBreakEvent event) {
     Player player = event.getPlayer();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player))
-        event.setCancelled(true); 
-    } 
+    if(W.playerArenaMap.containsKey(player)) event.setCancelled(true);
     if ((event.getBlock().equals(Material.OAK_SIGN) || 
       event.getBlock().equals(Material.OAK_WALL_SIGN)) && 
       !PermissionsM.hasPerm(player, PermissionsC.Permissions.signcreate, Boolean.valueOf(true)))

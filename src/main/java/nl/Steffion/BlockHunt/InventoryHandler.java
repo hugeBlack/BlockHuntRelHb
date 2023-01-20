@@ -13,11 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class InventoryHandler {
   public static void openPanel(Player player, String arenaname) {
-    Arena arena = null;
-    for (Arena arena2 : W.arenaList) {
-      if (arena2.arenaName.equalsIgnoreCase(arenaname))
-        arena = arena2; 
-    } 
+    Arena arena = W.playerArenaMap.get(player);
     if (arena != null) {
       String shorten = arena.arenaName;
       arenaname = arena.arenaName;

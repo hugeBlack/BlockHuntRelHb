@@ -1,7 +1,5 @@
 package nl.Steffion.BlockHunt;
 
-import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -9,23 +7,22 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Kit {
-    private static ArrayList<Kit> kits = new ArrayList<>();
-    private ItemStack[] inventory;
-    private ItemStack[] armor;
-    private ItemStack icon;
-    private ItemStack lIcon;
-    private String name;
-    private String filename;
-    private int position;
-    private int page;
-    private List<String> lore;
-    private String lockedLore;
-    private boolean enabled;
-    private boolean requirePermission;
+    public ItemStack[] inventory;
+    public ItemStack[] armor;
+    public ItemStack icon;
+    public ItemStack lIcon;
+    public String name;
+    public String filename;
+    public int position;
+    public int page;
+    public List<String> lore;
+    public String lockedLore;
+    public boolean enabled;
+    public boolean isSeekerKit;
+    public boolean requirePermission;
 
     /**
      * 构造一个kit
@@ -58,6 +55,7 @@ public class Kit {
         lore = storage.getStringList("lores.unlocked");
         lockedLore = storage.getString("lores.locked", "");
         enabled = storage.getBoolean("enabled");
+        isSeekerKit = storage.getBoolean("isSeekerKit",false);
         requirePermission = storage.getBoolean("requirePermission");
         filename = storage.getString("filename");
 
@@ -116,7 +114,7 @@ public class Kit {
         storage.set("page", page);
         storage.set("name", name);
         storage.set("enabled", enabled);
-
+        storage.set("isSeekerKit", isSeekerKit);
         storage.set("lores.unlocked", lore);
         storage.set("lores.locked", lockedLore);
         storage.set("filename", filename);

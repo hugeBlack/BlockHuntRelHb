@@ -6,10 +6,8 @@ import nl.Steffion.BlockHunt.Managers.MessageM;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class CMDreload extends DefaultCMD {
-    public CMDreload() {
+public class CMDReload extends DefaultCMD {
+    public CMDReload() {
         super("reload", "r", PermissionsC.Permissions.reload, ConfigC.help_reload, (Boolean) W.config.get(ConfigC.commandEnabled_reload), "/BlockHunt <reload|r>");
     }
 

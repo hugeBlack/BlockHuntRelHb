@@ -16,8 +16,8 @@ public class OnPlayerCommandPreprocessEvent implements Listener {
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
     Player player = event.getPlayer();
-    for (Arena arena : W.arenaList) {
-      if (arena.playersInArena.contains(player)) {
+    Arena arena = W.playerArenaMap.get(player);
+      if (arena!=null) {
         String m = event.getMessage();
         if (m.startsWith("/blockhunt") || m.startsWith("/bh") || 
           m.startsWith("/seekandfind") || 
@@ -36,7 +36,7 @@ public class OnPlayerCommandPreprocessEvent implements Listener {
           return; 
         MessageM.sendFMessage(player, ConfigC.warning_unableToCommand);
         event.setCancelled(true);
-      } 
+
     } 
   }
 }

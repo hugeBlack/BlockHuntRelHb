@@ -1,7 +1,6 @@
 package nl.Steffion.BlockHunt.Commands.arena;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import nl.Steffion.BlockHunt.*;
 import nl.Steffion.BlockHunt.Commands.DefaultCMD;
@@ -11,8 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-public class CMDcreate extends DefaultCMD {
-  public CMDcreate() {
+public class CMDCreate extends DefaultCMD {
+  public CMDCreate() {
     super("create", "c", PermissionsC.Permissions.create, ConfigC.help_create, (Boolean) W.config.get(ConfigC.commandEnabled_create), "/BlockHunt <create|c> <arenaname>");
   }
 
@@ -24,7 +23,7 @@ public class CMDcreate extends DefaultCMD {
         !W.config.getFile().getBoolean("wandEnabled")) {
         Arena arena;
         if (W.config.getFile().getBoolean("wandEnabled")) {
-          arena = new Arena(args[1], (LocationSerializable)W.pos1.get(player), (LocationSerializable)W.pos2.get(player), 12, 3, 1, 50, 20, 300, 30, 
+          arena = new Arena(args[1], W.pos1.get(player), W.pos2.get(player), 12, 3, 1, 50, 20, 300, 30,
               new ArrayList(), null, null, null, null, new ArrayList(), 
               new ArrayList(), new ArrayList(), 10, 50, 8,
               Arena.ArenaState.WAITING, 0,

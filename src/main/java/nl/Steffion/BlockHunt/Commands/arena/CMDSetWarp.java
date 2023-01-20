@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CMDsetwarp extends DefaultCMD {
-    public CMDsetwarp() {
+public class CMDSetWarp extends DefaultCMD {
+    public CMDSetWarp() {
         super("setwarp", "sw", PermissionsC.Permissions.setwarp, ConfigC.help_setwarp, (Boolean) W.config.get(ConfigC.commandEnabled_setwarp), "/BlockHunt <setwarp|sw> <lobby|hiders|seekers|spawn> <arenaname>");
     }
 
@@ -22,39 +22,34 @@ public class CMDsetwarp extends DefaultCMD {
             if (args.length <= 2) {
                 MessageM.sendFMessage(player, ConfigC.error_notEnoughArguments, "syntax-" + usage);
             } else {
-                String arenaname = args[2];
-                String warpname = args[1];
-                Arena arena = null;
-                for (Arena arena2 : W.arenaList) {
-                    if (arena2.arenaName.equalsIgnoreCase(arenaname))
-                        arena = arena2;
-                }
+                String warpName = args[1];
+                Arena arena = ArenaHandler.getArenaByName(args[2]);
                 if (arena != null) {
                     LocationSerializable loc = new LocationSerializable(player.getLocation());
-                    if (warpname.equalsIgnoreCase("lobby")) {
+                    if (warpName.equalsIgnoreCase("lobby")) {
                         arena.lobbyWarp = loc;
                         save(arena);
                         MessageM.sendFMessage(player,
-                                ConfigC.normal_setwarpWarpSet, "warp-" + warpname);
-                    } else if (warpname.equalsIgnoreCase("hiders")) {
+                                ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
+                    } else if (warpName.equalsIgnoreCase("hiders")) {
                         arena.hidersWarp = loc;
                         save(arena);
                         MessageM.sendFMessage(player,
-                                ConfigC.normal_setwarpWarpSet, "warp-" + warpname);
-                    } else if (warpname.equalsIgnoreCase("seekers")) {
+                                ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
+                    } else if (warpName.equalsIgnoreCase("seekers")) {
                         arena.seekersWarp = loc;
                         save(arena);
                         MessageM.sendFMessage(player,
-                                ConfigC.normal_setwarpWarpSet, "warp-" + warpname);
-                    } else if (warpname.equalsIgnoreCase("spawn")) {
+                                ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
+                    } else if (warpName.equalsIgnoreCase("spawn")) {
                         arena.spawnWarp = loc;
                         save(arena);
-                        MessageM.sendFMessage(player, ConfigC.normal_setwarpWarpSet, "warp-" + warpname);
+                        MessageM.sendFMessage(player, ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
                     } else {
-                        MessageM.sendFMessage(player, ConfigC.error_setwarpWarpNotFound, "warp-" + warpname);
+                        MessageM.sendFMessage(player, ConfigC.error_setwarpWarpNotFound, "warp-" + warpName);
                     }
                 } else {
-                    MessageM.sendFMessage(player, ConfigC.error_noArena, "name-" + arenaname);
+                    MessageM.sendFMessage(player, ConfigC.error_noArena, "name-" + args[2]);
                 }
             }
         } else {

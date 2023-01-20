@@ -1,6 +1,5 @@
 package nl.Steffion.BlockHunt.Commands;
 
-import nl.Steffion.BlockHunt.BlockHunt;
 import nl.Steffion.BlockHunt.ConfigC;
 import nl.Steffion.BlockHunt.Managers.MessageM;
 import nl.Steffion.BlockHunt.PermissionsC;
@@ -14,8 +13,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CMDtokens extends DefaultCMD {
-    public CMDtokens() {
+public class CMDTokens extends DefaultCMD {
+    public CMDTokens() {
         super("tokens", "t", PermissionsC.Permissions.tokens, ConfigC.help_tokens, (Boolean) W.config.get(ConfigC.commandEnabled_tokens), "/BlockHunt <tokens|t> <set|add|take> <playername> <amount>");
     }
 

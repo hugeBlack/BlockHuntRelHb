@@ -229,8 +229,8 @@ public class Arena implements ConfigurationSerializable {
         HashSet<Player> tmpHiders = new HashSet<>();
         HashSet<Player> tmpNeutral = new HashSet<>();
         for (Player player : playersInArena) {
-            if (W.choosenSeeker.containsKey(player)) {
-                if (W.choosenSeeker.get(player)) tmpSeekers.add(player);
+            if (W.chosenSeeker.containsKey(player)) {
+                if (W.chosenSeeker.get(player)) tmpSeekers.add(player);
                 else tmpHiders.add(player);
             } else {
                 tmpNeutral.add(player);
@@ -256,6 +256,12 @@ public class Arena implements ConfigurationSerializable {
      * 初始化seeker身上的物品，每局开始时调用
      */
     private void setSeekerInventory(Player player) {
+        Kit kit= W.playerSeekerKitMap.get(player);
+        if(kit!=null){
+            kit.give(player);
+            MessageM.sendFMessage(player, ConfigC.normal_kitLoaded, "name-" + kit.name);
+            return;
+        }
         player.getInventory().setItem(0, new ItemStack(Material.DIAMOND_SWORD, 1));
         player.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET, 1));
         player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE, 1));
@@ -267,6 +273,12 @@ public class Arena implements ConfigurationSerializable {
      * 初始化hider身上的物品，每局开始时调用
      */
     private void setHiderInventory(Player player) {
+        Kit kit= W.playerHiderKitMap.get(player);
+        if(kit!=null){
+            kit.give(player);
+            MessageM.sendFMessage(player, ConfigC.normal_kitLoaded, "name-" + kit.name);
+            return;
+        }
         ItemStack sword = new ItemStack(Material.WOODEN_SWORD, 1);
         sword.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
         ItemStack fireworks = new ItemStack(Material.FIREWORK_ROCKET, 64);
@@ -296,10 +308,10 @@ public class Arena implements ConfigurationSerializable {
             } else {
                 //将hider初始化
                 ItemStack block;
-                if (W.choosenBlock.get(nowPlayer) != null) {
+                if (W.chosenBlock.get(nowPlayer) != null) {
                     //玩家选择了就用选择的方块
-                    block = W.choosenBlock.get(nowPlayer);
-                    W.choosenBlock.remove(nowPlayer);
+                    block = W.chosenBlock.get(nowPlayer);
+                    W.chosenBlock.remove(nowPlayer);
                 } else {
                     //随机选择一个方块
                     block = this.disguiseBlocks.get(W.random.nextInt(this.disguiseBlocks.size()));
@@ -374,6 +386,7 @@ public class Arena implements ConfigurationSerializable {
      */
     public void playerLeaveHandler(Player player, boolean message, boolean cleanup){
         {
+            W.playerArenaMap.remove(player);
             //需要对jjc内变量进行清理，对应的是玩家中途跑了的情况
             if (cleanup) {
                 playersInArena.remove(player);
@@ -488,6 +501,7 @@ public class Arena implements ConfigurationSerializable {
             return;
         }
         //条件都满足了，将玩家加入jjc
+        W.playerArenaMap.put(player,this);
         //保存物品栏
         boolean inventoryempty = true;
         for (ItemStack invItem : player.getInventory()) {
@@ -577,6 +591,35 @@ public class Arena implements ConfigurationSerializable {
         //提示还需要多少玩家
         if (playersInArena.size() < minPlayers)
             sendArenaMessage(ConfigC.warning_lobbyNeedAtleast, "1-" + minPlayers);
+        //给予两个kit选择器
+        //TODO 权限+物品样式
+        if ((Boolean) W.config.get(ConfigC.shop_KitEnabled) && PermissionsM.hasPerm(player, PermissionsC.Permissions.shopKitSelector, Boolean.FALSE)) {
+            ItemStack shopBlockHuntPass = new ItemStack(Material.getMaterial((String) W.config.get(ConfigC.shop_KitSelectorHiderIdName)), 1);
+            ItemMeta shopBlockHuntPass_IM = shopBlockHuntPass.getItemMeta();
+            shopBlockHuntPass_IM.setDisplayName(MessageM.replaceAll((String) W.config.get(ConfigC.shop_KitSelectorHiderName)));
+            List<String> lores = W.config.getFile().getStringList(ConfigC.shop_BlockHuntPassv2Description.fileKey);
+            List<String> lores2 = new ArrayList<>();
+            for (String lore : lores)
+                lores2.add(MessageM.replaceAll(lore));
+            shopBlockHuntPass_IM.setLore(lores2);
+            shopBlockHuntPass.setItemMeta(shopBlockHuntPass_IM);
+            shopBlockHuntPass.setAmount(1);
+            player.getInventory().addItem(shopBlockHuntPass);
+        }
+        //TODO 权限+物品样式
+        if ((Boolean) W.config.get(ConfigC.shop_KitEnabled) && PermissionsM.hasPerm(player, PermissionsC.Permissions.shopKitSelector, Boolean.FALSE)) {
+            ItemStack shopBlockHuntPass = new ItemStack(Material.getMaterial((String) W.config.get(ConfigC.shop_KitSelectorSeekerIdName)), 1);
+            ItemMeta shopBlockHuntPass_IM = shopBlockHuntPass.getItemMeta();
+            shopBlockHuntPass_IM.setDisplayName(MessageM.replaceAll((String) W.config.get(ConfigC.shop_KitSelectorSeekerName)));
+            List<String> lores = W.config.getFile().getStringList(ConfigC.shop_BlockHuntPassv2Description.fileKey);
+            List<String> lores2 = new ArrayList<>();
+            for (String lore : lores)
+                lores2.add(MessageM.replaceAll(lore));
+            shopBlockHuntPass_IM.setLore(lores2);
+            shopBlockHuntPass.setItemMeta(shopBlockHuntPass_IM);
+            shopBlockHuntPass.setAmount(1);
+            player.getInventory().addItem(shopBlockHuntPass);
+        }
     }
     
     /**

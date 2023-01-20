@@ -8,10 +8,8 @@ import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
-import java.util.List;
-
-public class CMDleave extends DefaultCMD {
-    public CMDleave() {
+public class CMDLeave extends DefaultCMD {
+    public CMDLeave() {
         super("leave", "l", PermissionsC.Permissions.leave, ConfigC.help_leave, (Boolean) W.config.get(ConfigC.commandEnabled_leave), "/BlockHunt <leave|l>");
     }
 
@@ -19,7 +17,7 @@ public class CMDleave extends DefaultCMD {
         if (player != null) {
             ArenaHandler.playerLeaveArena(player, true, true);
         } else {
-            MessageM.sendFMessage(player, ConfigC.error_onlyIngame, new String[0]);
+            MessageM.sendFMessage(player, ConfigC.error_onlyIngame);
         }
         return true;
     }

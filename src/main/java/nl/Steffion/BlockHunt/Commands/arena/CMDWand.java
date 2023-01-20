@@ -15,8 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class CMDwand extends DefaultCMD {
-    public CMDwand() {
+public class CMDWand extends DefaultCMD {
+    public CMDWand() {
         super("wand", "w", PermissionsC.Permissions.create, ConfigC.help_wand, true, "/BlockHunt <wand|w>");
     }
 

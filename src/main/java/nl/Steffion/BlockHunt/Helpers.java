@@ -1,18 +1,20 @@
 package nl.Steffion.BlockHunt;
 
+import jline.internal.Nullable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -63,12 +65,15 @@ public class Helpers {
         return config;
     }
 
-    public static LinkedList<String> listArenas(){
-        LinkedList<String> ans = new LinkedList<>();
-        for(Arena arena:W.arenaList){
-            ans.add(arena.arenaName);
-        }
-        return ans;
+    public static ItemStack getItemStack(ItemStack item, List<String> lore, String message) {
+        ItemStack addItem = item.clone();
+        ItemMeta addItemMeta = addItem.getItemMeta();
+        assert addItemMeta != null;
+        addItemMeta.setDisplayName(message);
+        addItemMeta.setLore(lore);
+        addItemMeta.addItemFlags(ItemFlag.values());
+        addItem.setItemMeta(addItemMeta);
+        return addItem;
     }
 }
 
