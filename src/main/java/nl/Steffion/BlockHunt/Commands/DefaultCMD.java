@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public abstract class DefaultCMD {
-    public String name;
-    public String label;
     public String args;
     public String argsAlias;
     public PermissionsC.Permissions permission;
@@ -18,9 +16,7 @@ public abstract class DefaultCMD {
     public boolean enabled;
     public String usage;
 
-    public DefaultCMD(String name, String label, String args, String argsAlias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        this.name = name;
-        this.label = label;
+    public DefaultCMD(String args, String argsAlias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
         this.args = args;
         this.argsAlias = argsAlias;
         this.permission = permission;

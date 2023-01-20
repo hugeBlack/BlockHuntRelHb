@@ -9,11 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CMDsetwarp extends DefaultCMD {
-    public CMDsetwarp(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        super(name, label, args, argsalias, permission, help, enabled, usage);
+    public CMDsetwarp() {
+        super("setwarp", "sw", PermissionsC.Permissions.setwarp, ConfigC.help_setwarp, (Boolean) W.config.get(ConfigC.commandEnabled_setwarp), "/BlockHunt <setwarp|sw> <lobby|hiders|seekers|spawn> <arenaname>");
     }
 
     public boolean execute(Player player, Command cmd, String label, String[] args) {
@@ -70,7 +71,7 @@ public class CMDsetwarp extends DefaultCMD {
 
     @Override
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length==2) return Arrays.asList("lobby", "hiders", "seekers", "spawn");
+        if(args.length==2) return new LinkedList<>(Arrays.asList("lobby", "hiders", "seekers", "spawn"));
         if(args.length==3) return ArenaHandler.getArenaNames();
         return null;
     }

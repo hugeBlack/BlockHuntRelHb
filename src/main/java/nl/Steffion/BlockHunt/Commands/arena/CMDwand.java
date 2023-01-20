@@ -16,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class CMDwand extends DefaultCMD {
-    public CMDwand(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        super(name, label, args, argsalias, permission, help, enabled, usage);
+    public CMDwand() {
+        super("wand", "w", PermissionsC.Permissions.create, ConfigC.help_wand, true, "/BlockHunt <wand|w>");
     }
 
     public boolean execute(Player player, Command cmd, String label, String[] args) {

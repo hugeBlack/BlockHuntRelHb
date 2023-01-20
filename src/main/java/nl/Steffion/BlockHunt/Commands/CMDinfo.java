@@ -4,14 +4,15 @@ import nl.Steffion.BlockHunt.BlockHunt;
 import nl.Steffion.BlockHunt.ConfigC;
 import nl.Steffion.BlockHunt.Managers.MessageM;
 import nl.Steffion.BlockHunt.PermissionsC;
+import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class CMDinfo extends DefaultCMD {
-  public CMDinfo(String name, String label, String args, String argsAlias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-    super(name, label, args, argsAlias, permission, help, enabled, usage);
+  public CMDinfo() {
+    super("info", "i", PermissionsC.Permissions.info, ConfigC.help_info, (Boolean) W.config.get(ConfigC.commandEnabled_info), "/BlockHunt [info|i]");
   }
 
   public boolean execute(Player player, Command cmd, String label, String[] args) {
@@ -30,9 +31,3 @@ public class CMDinfo extends DefaultCMD {
     return true;
   }
 }
-
-
-/* Location:              E:\minecraft\hideandSeek\plugins\BlockHuntRel-1.18.2.jar!\nl\Steffion\BlockHunt\Commands\CMDinfo.class
- * Java compiler version: 17 (61.0)
- * JD-Core Version:       1.1.3
- */

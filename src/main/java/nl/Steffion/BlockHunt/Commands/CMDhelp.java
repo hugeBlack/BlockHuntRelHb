@@ -11,11 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CMDhelp extends DefaultCMD {
-    public CMDhelp(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        super(name, label, args, argsalias, permission, help, enabled, usage);
+    public CMDhelp() {
+        super("help", "h", PermissionsC.Permissions.help, ConfigC.help_help, (Boolean) W.config.get(ConfigC.commandEnabled_help), "/BlockHunt <help|h> [page number]");
     }
 
     public boolean execute(Player player, Command cmd, String label, String[] args) {
@@ -76,6 +77,9 @@ public class CMDhelp extends DefaultCMD {
 
     @Override
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
-        return Arrays.asList("1", "2", "3", "4");
+        if(args.length==2)
+            return new LinkedList<>(Arrays.asList("1", "2", "3", "4"));
+        else
+            return null;
     }
 }

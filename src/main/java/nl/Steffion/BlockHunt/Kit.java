@@ -1,6 +1,7 @@
 package nl.Steffion.BlockHunt;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -63,7 +64,7 @@ public class Kit {
         try {
             storage.save(kitFile);
         } catch (IOException e) {
-            W.thePlugin.getLogger().info("Failed to save kit file!");
+            BlockHunt.plugin.getLogger().info("Failed to save kit file!");
         }
     }
 
@@ -94,7 +95,7 @@ public class Kit {
     }
 
     public void save() {
-        File dataDirectory = W.thePlugin.getDataFolder();
+        File dataDirectory = BlockHunt.plugin.getDataFolder();
         File kitsDirectory = new File(dataDirectory, "kits");
         if (!kitsDirectory.exists()) {
             if (!kitsDirectory.mkdirs()) {
@@ -123,7 +124,7 @@ public class Kit {
         try {
             storage.save(kitFile);
         } catch (IOException e) {
-            W.thePlugin.getLogger().info("Failed to save kit file!");
+            BlockHunt.plugin.getLogger().info("Failed to save kit file!");
         }
     }
 }

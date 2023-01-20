@@ -21,11 +21,8 @@ public class BlockHunt extends JavaPlugin implements Listener {
     public static PluginDescriptionFile pdfFile;
     public static BlockHunt plugin;
     public static Economy econ = null;
-    public static List<String> BlockHuntCMD = new ArrayList<>();
-    public static CMDinfo CMD;
 
     public void onEnable() {
-        W.thePlugin = this;
         //<editor-fold desc="注册监听器">
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new OnBlockBreakEvent(), this);
@@ -48,7 +45,10 @@ public class BlockHunt extends JavaPlugin implements Listener {
         plugin = this;
         ConfigM.newFiles();
         //<editor-fold desc="注册指令">
-        CommandManager.regCMDs();
+        CommandManager bhCmdManager = new CommandManager();
+        BHTabCompleter bhTabCompleter = new BHTabCompleter();
+        getCommand("blockhunt").setExecutor(bhCmdManager);
+        getCommand("blockhunt").setTabCompleter(bhTabCompleter);
         //</editor-fold>
         //<editor-fold desc="检查依赖">
         if (!getServer().getPluginManager().isPluginEnabled("LibsDisguises")) {
@@ -131,8 +131,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
             arena.stop();
         MessageM.sendFMessage(null, ConfigC.log_disabledPlugin, "name-" +
                 pdfFile.getName(),
-                "version-" + pdfFile.getVersion(), "autors-" +
-                (String) pdfFile.getAuthors().get(0));
+                "version-" + pdfFile.getVersion(), "autors-" + pdfFile.getAuthors().get(0));
     }
 
     public static String stringBuilder(String[] input, int startArg) {
@@ -142,60 +141,6 @@ public class BlockHunt extends JavaPlugin implements Listener {
         for (int i = ++startArg; i < input.length; i++)
             sb.append(' ').append(input[i]);
         return sb.toString();
-    }
-
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player player = null;
-        if (sender instanceof Player)
-            player = (Player) sender;
-        for (DefaultCMD command : CommandManager.commands) {
-            String[] argsSplit = null;
-            String[] argsSplitAlias = null;
-            if (command.args != null && command.argsAlias != null) {
-                argsSplit = command.args.split("/");
-                argsSplitAlias = command.argsAlias.split("/");
-            }
-            if (cmd.getName().equalsIgnoreCase(command.label)) {
-                boolean equals = true;
-                if (argsSplit == null) {
-                    if (args.length == 0) {
-                        equals = true;
-                    } else {
-                        equals = false;
-                    }
-                } else if (args.length >= argsSplit.length) {
-                    for (int i2 = argsSplit.length - 1; i2 >= 0; i2--) {
-                        int loc = argsSplit.length - i2 - 1;
-                        if (!argsSplit[loc].equalsIgnoreCase(args[loc]) &&
-
-                                !argsSplitAlias[loc].equalsIgnoreCase(args[loc]))
-                            equals = false;
-                    }
-                } else {
-                    equals = false;
-                }
-                if (equals) {
-                    if (PermissionsM.hasPerm(player, command.permission, Boolean.TRUE))
-                        if (command.enabled) {
-                            command.execute(player, cmd, label, args);
-                        } else {
-                            MessageM.sendFMessage(player,
-                                    ConfigC.error_commandNotEnabled);
-                        }
-                    return true;
-                }
-            }
-        }
-        CMDnotfound.exectue(player, cmd, label, args);
-        return true;
-    }
-
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        for (DefaultCMD command : CommandManager.commands) {
-            if (cmd.getName().equalsIgnoreCase(command.label) && args.length == 1)
-                return command.tabCompleter(sender,cmd,label,args);
-        }
-        return null;
     }
 
     public static String cutString(String string, int maxLenght) {

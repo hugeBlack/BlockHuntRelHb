@@ -169,19 +169,9 @@ public class OnInventoryClickEvent implements Listener {
                 MessageM.sendFMessage(player, ConfigC.normal_shopAlreadyHiders);
                 return;
             }
-            //记录当前场所有hider数量
-            for (Player playerCheck : nowArena.playersInArena) {
-                if (W.choosenSeeker.get(playerCheck) != null && !W.choosenSeeker.get(playerCheck))
-                    i++;
-            }
-            //场内不能所有人都是hider
-            if (i >= nowArena.playersInArena.size() - 1) {
-                MessageM.sendFMessage(player, ConfigC.error_shopMaxHidersReached);
-            } else {
-                //满足条件，可以加入hiders阵营
-                W.choosenSeeker.put(player, Boolean.FALSE);
-                MessageM.sendFMessage(player, ConfigC.normal_shopChoosenHiders);
-            }
+            //满足条件，可以加入hiders阵营
+            W.choosenSeeker.put(player, Boolean.FALSE);
+            MessageM.sendFMessage(player, ConfigC.normal_shopChoosenHiders);
         } else if (event.getCurrentItem().getType() == Material.RED_WOOL) {
             //点击seekers物品，红色羊毛
             //已经是seeker就直接返回
@@ -189,19 +179,9 @@ public class OnInventoryClickEvent implements Listener {
                 MessageM.sendFMessage(player, ConfigC.normal_shopAlreadySeeker);
                 return;
             }
-            //记录当前场所有seeker数量
-            for (Player playerCheck : nowArena.playersInArena) {
-                if (W.choosenSeeker.get(playerCheck) != null && W.choosenSeeker.get(playerCheck))
-                    i++;
-            }
-            //场内不能所有人都是seeker
-            if (i >= nowArena.playersInArena.size() - 1) {
-                MessageM.sendFMessage(player, ConfigC.error_shopMaxSeekersReached);
-            } else {
-                //满足条件，可以加入seeker阵营
-                W.choosenSeeker.put(player, Boolean.TRUE);
-                MessageM.sendFMessage(player, ConfigC.normal_shopChoosenSeeker);
-            }
+            //满足条件，可以加入seeker阵营
+            W.choosenSeeker.put(player, Boolean.TRUE);
+            MessageM.sendFMessage(player, ConfigC.normal_shopChoosenSeeker);
         } else if (event.getCurrentItem().getType() == Material.WHITE_WOOL){
             //选择中立状态
             W.choosenSeeker.remove(player);

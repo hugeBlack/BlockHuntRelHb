@@ -164,8 +164,6 @@ public enum ConfigC {
   error_tokensUnknownsetting("%TAG%E'%A%option%%E' is not a known option!", W.messages),
   error_shopNeedMoreTokens("%TAG%EYou need more tokens before you can buy this item.", W.messages),
   error_shopNeedMoreMoney("%TAG%EYou don't have enough money to do this", W.messages),
-  error_shopMaxSeekersReached("%TAG%ESorry, the maximum amount of seekers has been reached!", W.messages),
-  error_shopMaxHidersReached("%TAG%ESorry, the maximum amount of hiders has been reached!", W.messages),
   error_trueVaultNull("%TAG%EVault has been enabled in the config.yml but cannot find the 'Vault' plugin! The plugin will not run", W.messages);
   
   public Object value;

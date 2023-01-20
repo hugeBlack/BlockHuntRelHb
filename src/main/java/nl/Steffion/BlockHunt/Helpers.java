@@ -11,11 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * 储存需要用到的，与游戏性关联不大的静态方法
+ * 储存需要用到的静态方法
  */
 public class Helpers {
     /**
@@ -60,6 +61,14 @@ public class Helpers {
         }
 
         return config;
+    }
+
+    public static LinkedList<String> listArenas(){
+        LinkedList<String> ans = new LinkedList<>();
+        for(Arena arena:W.arenaList){
+            ans.add(arena.arenaName);
+        }
+        return ans;
     }
 }
 

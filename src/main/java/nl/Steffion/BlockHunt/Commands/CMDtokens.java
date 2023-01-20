@@ -7,13 +7,16 @@ import nl.Steffion.BlockHunt.PermissionsC;
 import nl.Steffion.BlockHunt.W;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CMDtokens extends DefaultCMD {
-    public CMDtokens(String name, String label, String args, String argsAlias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        super(name, label, args, argsAlias, permission, help, enabled, usage);
+    public CMDtokens() {
+        super("tokens", "t", PermissionsC.Permissions.tokens, ConfigC.help_tokens, (Boolean) W.config.get(ConfigC.commandEnabled_tokens), "/BlockHunt <tokens|t> <set|add|take> <playername> <amount>");
     }
 
     public boolean execute(Player player, Command cmd, String label, String[] args) {
@@ -63,5 +66,11 @@ public class CMDtokens extends DefaultCMD {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
+        if(args.length==2) return new LinkedList<>(Arrays.asList("set","add","take"));
+        return null;
     }
 }

@@ -12,8 +12,8 @@ import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 public class CMDcreate extends DefaultCMD {
-  public CMDcreate(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-    super(name, label, args, argsalias, permission, help, enabled, usage);
+  public CMDcreate() {
+    super("create", "c", PermissionsC.Permissions.create, ConfigC.help_create, (Boolean) W.config.get(ConfigC.commandEnabled_create), "/BlockHunt <create|c> <arenaname>");
   }
 
   public boolean execute(Player player, Command cmd, String label, String[] args) {

@@ -71,16 +71,16 @@ public class OnPlayerInteractEvent implements Listener {
                                     !W.pos2.get(player).equals(location)) {
                                 MessageM.sendFMessage(
                                         player,
-                                        ConfigC.normal_wandSetPosition, new String[]{"number-2",
-                                                "pos-%N(%A" + location.getBlockX() +
-                                                        "%N, %A" +
-                                                        location.getBlockY() +
-                                                        "%N, %A" +
-                                                        location.getBlockZ() +
-                                                        "%N)",
-                                                "x-" + location.getBlockX(), "y-" +
-                                                location.getBlockY(),
-                                                "z-" + location.getBlockZ()});
+                                        ConfigC.normal_wandSetPosition, "number-2",
+                                        "pos-%N(%A" + location.getBlockX() +
+                                                "%N, %A" +
+                                                location.getBlockY() +
+                                                "%N, %A" +
+                                                location.getBlockZ() +
+                                                "%N)",
+                                        "x-" + location.getBlockX(), "y-" +
+                                        location.getBlockY(),
+                                        "z-" + location.getBlockZ());
                                 W.pos2.put(player, location);
                             }
                         }

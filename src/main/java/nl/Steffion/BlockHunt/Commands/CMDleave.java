@@ -4,28 +4,23 @@ import nl.Steffion.BlockHunt.ArenaHandler;
 import nl.Steffion.BlockHunt.ConfigC;
 import nl.Steffion.BlockHunt.Managers.MessageM;
 import nl.Steffion.BlockHunt.PermissionsC;
+import nl.Steffion.BlockHunt.W;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class CMDleave extends DefaultCMD {
-  public CMDleave(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-    super(name, label, args, argsalias, permission, help, enabled, usage);
-  }
+    public CMDleave() {
+        super("leave", "l", PermissionsC.Permissions.leave, ConfigC.help_leave, (Boolean) W.config.get(ConfigC.commandEnabled_leave), "/BlockHunt <leave|l>");
+    }
 
-  public boolean execute(Player player, Command cmd, String label, String[] args) {
-    if (player != null) {
-      ArenaHandler.playerLeaveArena(player, true, true);
-    } else {
-      MessageM.sendFMessage(player, ConfigC.error_onlyIngame, new String[0]);
-    } 
-    return true;
-  }
+    public boolean execute(Player player, Command cmd, String label, String[] args) {
+        if (player != null) {
+            ArenaHandler.playerLeaveArena(player, true, true);
+        } else {
+            MessageM.sendFMessage(player, ConfigC.error_onlyIngame, new String[0]);
+        }
+        return true;
+    }
 }
-
-
-/* Location:              E:\minecraft\hideandSeek\plugins\BlockHuntRel-1.18.2.jar!\nl\Steffion\BlockHunt\Commands\CMDleave.class
- * Java compiler version: 17 (61.0)
- * JD-Core Version:       1.1.3
- */

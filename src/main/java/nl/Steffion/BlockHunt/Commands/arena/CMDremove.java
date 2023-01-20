@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CMDremove extends DefaultCMD {
-    public CMDremove(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-        super(name, label, args, argsalias, permission, help, enabled, usage);
+    public CMDremove() {
+        super("remove", "delete", PermissionsC.Permissions.remove, ConfigC.help_remove, (Boolean) W.config.get(ConfigC.commandEnabled_remove), "/BlockHunt <remove|delete> <arenaname>");
     }
 
     public boolean execute(Player player, Command cmd, String label, String[] args) {

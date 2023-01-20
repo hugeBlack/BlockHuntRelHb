@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class CMDlist extends DefaultCMD {
-  public CMDlist(String name, String label, String args, String argsalias, PermissionsC.Permissions permission, ConfigC help, Boolean enabled, String usage) {
-    super(name, label, args, argsalias, permission, help, enabled, usage);
+  public CMDlist() {
+    super("list", "li", PermissionsC.Permissions.list, ConfigC.help_list, (Boolean) W.config.get(ConfigC.commandEnabled_list), "/BlockHunt <list|li>");
   }
 
   public boolean execute(Player player, Command cmd, String label, String[] args) {
