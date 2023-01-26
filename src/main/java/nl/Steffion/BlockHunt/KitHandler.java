@@ -18,7 +18,7 @@ import java.util.List;
 public class KitHandler {
     public static HashMap<String,Kit> kitMap = new HashMap<>();
     public static NamespacedKey kitMenuIconKey = new NamespacedKey(BlockHunt.plugin,"kitMenuItem");
-    public static void newKit(Player player, String kitName) {
+    public static void newKit(Player player, String kitName,boolean isSeekerKit) {
         File dataDirectory = BlockHunt.plugin.getDataFolder();
         File kitsDirectory = new File(dataDirectory, "kits");
         if (!kitsDirectory.exists()) {
@@ -52,6 +52,7 @@ public class KitHandler {
         storage.set("gameSettings.noFallDamage", false);
 
         storage.set("filename", kitFile.getName().substring(0, kitFile.getName().lastIndexOf('.')));
+        storage.set("isSeekerKit",isSeekerKit);
 
         try {
             storage.save(kitFile);

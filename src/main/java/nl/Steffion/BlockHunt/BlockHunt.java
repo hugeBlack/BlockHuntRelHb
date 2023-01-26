@@ -32,7 +32,6 @@ public class BlockHunt extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new OnFoodLevelChangeEvent(), this);
         getServer().getPluginManager().registerEvents(new OnInventoryClickEvent(), this);
         getServer().getPluginManager().registerEvents(new OnInventoryCloseEvent(), this);
-        getServer().getPluginManager().registerEvents(new OnPlayerCommandPreprocessEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerDropItemEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerInteractEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerMoveEvent(), this);

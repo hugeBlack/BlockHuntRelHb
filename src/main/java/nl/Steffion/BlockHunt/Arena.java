@@ -37,10 +37,6 @@ public class Arena implements ConfigurationSerializable {
     public LocationSerializable lobbyWarp;
     public LocationSerializable hidersWarp;
     public LocationSerializable seekersWarp;
-    public LocationSerializable spawnWarp;
-    public List<String> seekersWinCommands;
-    public List<String> hidersWinCommands;
-    public List<String> allowedCommands;
     public int seekersTokenWin;
     public int hidersTokenWin;
     public int killTokens;
@@ -51,7 +47,7 @@ public class Arena implements ConfigurationSerializable {
     public Scoreboard scoreboard;
     public HashMap<Player,Integer> seekerTime = new HashMap<>();
 
-    public Arena(String arenaName, LocationSerializable pos1, LocationSerializable pos2, int maxPlayers, int minPlayers, int amountSeekersOnStart, int timeInLobbyUntilStart, int waitingTimeSeeker, int gameTime, int timeUntilHidersSword, ArrayList<ItemStack> disguiseBlocks, LocationSerializable lobbyWarp, LocationSerializable hidersWarp, LocationSerializable seekersWarp, LocationSerializable spawnWarp, List<String> seekersWinCommands, List<String> hidersWinCommands, List<String> allowedCommands, int seekersTokenWin, int hidersTokenWin, int killTokens, ArenaState gameState, int timer, Scoreboard scoreboard) {
+    public Arena(String arenaName, LocationSerializable pos1, LocationSerializable pos2, int maxPlayers, int minPlayers, int amountSeekersOnStart, int timeInLobbyUntilStart, int waitingTimeSeeker, int gameTime, int timeUntilHidersSword, ArrayList<ItemStack> disguiseBlocks, LocationSerializable lobbyWarp, LocationSerializable hidersWarp, LocationSerializable seekersWarp, int seekersTokenWin, int hidersTokenWin, int killTokens, ArenaState gameState, Scoreboard scoreboard) {
         this.arenaName = arenaName;
         if(pos1!=null && pos2!=null){
             double maxX = Math.max(pos1.getX(), pos2.getX());
@@ -62,7 +58,7 @@ public class Arena implements ConfigurationSerializable {
             double minZ = Math.min(pos1.getZ(), pos2.getZ());
             //pos1是xyz中小的，pos2是xyz中大的
             this.pos1 = new Location(pos1.getWorld(),minX,minY,minZ);
-            this.pos2 = new Location(pos2.getWorld(),maxX,maxY,maxZ);;
+            this.pos2 = new Location(pos2.getWorld(),maxX,maxY,maxZ);
         }
 
         this.maxPlayers = maxPlayers;
@@ -76,15 +72,11 @@ public class Arena implements ConfigurationSerializable {
         this.lobbyWarp = lobbyWarp;
         this.hidersWarp = hidersWarp;
         this.seekersWarp = seekersWarp;
-        this.spawnWarp = spawnWarp;
-        this.seekersWinCommands = seekersWinCommands;
-        this.hidersWinCommands = hidersWinCommands;
-        this.allowedCommands = allowedCommands;
         this.seekersTokenWin = seekersTokenWin;
         this.hidersTokenWin = hidersTokenWin;
         this.killTokens = killTokens;
         this.gameState = gameState;
-        this.timer = timer;
+        this.timer = 0;
         this.scoreboard = scoreboard;
         this.seekers = new HashSet<>();
         this.playersInArena = new HashSet<>();
@@ -114,10 +106,6 @@ public class Arena implements ConfigurationSerializable {
         map.put("lobbyWarp", this.lobbyWarp);
         map.put("hidersWarp", this.hidersWarp);
         map.put("seekersWarp", this.seekersWarp);
-        map.put("spawnWarp", this.spawnWarp);
-        map.put("seekersWinCommands", this.seekersWinCommands);
-        map.put("hidersWinCommands", this.hidersWinCommands);
-        map.put("allowedCommands", this.allowedCommands);
         map.put("seekersTokenWin", this.seekersTokenWin);
         map.put("hidersTokenWin", this.hidersTokenWin);
         map.put("killTokens", this.killTokens);
@@ -125,33 +113,27 @@ public class Arena implements ConfigurationSerializable {
     }
 
     public static Arena deserialize(Map<String, Object> map) {
-        LocationSerializable loc = new LocationSerializable(
-                Bukkit.getWorld("world"), 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
+        //默认位置
+        LocationSerializable loc = new LocationSerializable(Bukkit.getWorld("world"), 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
         return new Arena((String) M.g(map, "arenaName", "UNKNOWN_NAME"),
                 (LocationSerializable) M.g(map, "pos1", loc),
-                (LocationSerializable) M.g(map, "pos2", loc), (Integer) M.g(
-                map, "maxPlayers", 12), (Integer) M.g(map,
-                "minPlayers", 3), (Integer) M.g(map,
-                "amountSeekersOnStart", 1), (Integer) M.g(map,
-                "timeInLobbyUntilStart", 90), (Integer) M.g(map,
-                "waitingTimeSeeker", 20), (Integer) M.g(map,
-                "gameTime", 200), (Integer) M.g(map,
-                "timeUntilHidersSword", 30),
+                (LocationSerializable) M.g(map, "pos2", loc),
+                (Integer) M.g(map, "maxPlayers", 12),
+                (Integer) M.g(map, "minPlayers", 3),
+                (Integer) M.g(map, "amountSeekersOnStart", 1),
+                (Integer) M.g(map, "timeInLobbyUntilStart", 90),
+                (Integer) M.g(map, "waitingTimeSeeker", 20),
+                (Integer) M.g(map, "gameTime", 200),
+                (Integer) M.g(map, "timeUntilHidersSword", 30),
                 (ArrayList<ItemStack>) M.g(map, "disguiseBlocks", new ArrayList()),
                 (LocationSerializable) M.g(map, "lobbyWarp", loc),
                 (LocationSerializable) M.g(map, "hidersWarp", loc),
                 (LocationSerializable) M.g(map, "seekersWarp", loc),
-                (LocationSerializable) M.g(map, "spawnWarp", loc),
-                (ArrayList) M.g(map, "seekersWinCommands", new ArrayList()),
-                (ArrayList) M.g(map, "hidersWinCommands", new ArrayList()),
-                (ArrayList) M.g(map, "allowedCommands", new ArrayList()),
                 (Integer) M.g(map, "seekersTokenWin", 10),
                 (Integer) M.g(map, "hidersTokenWin", 50),
                 (Integer) M.g(map, "killTokens", 8),
                 ArenaState.WAITING,
-                0,
-                Bukkit.getScoreboardManager()
-                        .getNewScoreboard());
+                Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     /**
@@ -373,6 +355,8 @@ public class Arena implements ConfigurationSerializable {
             seekersWin();
             return;
         }
+        //不论如何玩家死后都会变成seeker
+        setSeekerInventory(player);
         DisguiseAPI.undisguiseToAll(player);
         //重置seeker冷却
         seekerTime.put(player, timer-waitingTimeSeeker);
@@ -397,42 +381,8 @@ public class Arena implements ConfigurationSerializable {
                     timer = 0;
                     sendArenaMessage(ConfigC.warning_lobbyNeedAtleast, "1-" + minPlayers);
                 }
-                //游戏中有一方
                 if(gameState == Arena.ArenaState.INGAME){
-                    if (playersInArena.size() <= 1 )
-                        if (seekers.size() >= playersInArena.size()) {
-                            seekersWin();
-                        } else {
-                            hidersWin();
-                        }
-                    //剩下的都是seekers了，则seeker赢
-                    if (seekers.size() >= playersInArena.size())
-                        seekersWin();
-                    //seeker跑光了，指定新的seeker
-                    if (seekers.size() == 0) {
-                        Iterator<Player> it = playersInArena.iterator();
-                        int playeri = W.random.nextInt(playersInArena.size());
-                        for (int i = 0; i < playeri - 1; i++) {
-                            it.next();
-                        }
-                        Player seeker = it.next();
-                        sendArenaMessage(ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
-                        sendArenaMessage(ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
-                        DisguiseAPI.undisguiseToAll(seeker);
-                        for (Player pl : Bukkit.getOnlinePlayers())
-                            pl.showPlayer(seeker);
-                        seeker.getInventory().clear();
-                        seekers.add(seeker);
-                        seeker.teleport(seekersWarp);
-                        seekerTime.put(seeker, timer-waitingTimeSeeker);
-                        seeker.setWalkSpeed(0.25F);
-                        for (Player otherplayer : playersInArena) {
-                            if (otherplayer.canSee(player))
-                                otherplayer.showPlayer(player);
-                            if (player.canSee(otherplayer))
-                                player.showPlayer(otherplayer);
-                        }
-                    }
+                    inGamePlayerLeaveHandler(player);
                 }
             }
             PlayerArenaData pad = new PlayerArenaData();
@@ -447,7 +397,7 @@ public class Arena implements ConfigurationSerializable {
             player.setHealth(pad.pHealth);
             player.setFoodLevel(pad.pFood);
             player.addPotionEffects(pad.pPotionEffects);
-            player.teleport(spawnWarp);
+            player.teleport((Location) W.config.get(ConfigC.lobbyPosition));
             player.setGameMode(pad.pGameMode);
             player.setAllowFlight(pad.pFlying);
             if (player.getAllowFlight())
@@ -474,6 +424,51 @@ public class Arena implements ConfigurationSerializable {
         }
     }
 
+
+    /**
+     * 处理玩家在游戏中离开的情况
+     * @param player
+     */
+    private void inGamePlayerLeaveHandler(Player player){
+        if (playersInArena.size() <= 1 )
+            if (seekers.size() >= playersInArena.size()) {
+                seekersWin();
+                return;
+            } else {
+                hidersWin();
+                return;
+            }
+        //剩下的都是seekers了，则seeker赢
+        if (seekers.size() >= playersInArena.size()) {
+            seekersWin();
+            return;
+        }
+        //seeker跑光了，指定新的seeker
+        if (seekers.size() == 0) {
+            Iterator<Player> it = playersInArena.iterator();
+            int playeri = W.random.nextInt(playersInArena.size());
+            for (int i = 0; i < playeri - 1; i++) {
+                it.next();
+            }
+            Player seeker = it.next();
+            sendArenaMessage(ConfigC.warning_ingameNEWSeekerChoosen, "seeker-" + seeker.getName());
+            sendArenaMessage(ConfigC.normal_ingameSeekerChoosen, "seeker-" + seeker.getName());
+            DisguiseAPI.undisguiseToAll(seeker);
+            for (Player pl : Bukkit.getOnlinePlayers())
+                pl.showPlayer(seeker);
+            seeker.getInventory().clear();
+            seekers.add(seeker);
+            seeker.teleport(seekersWarp);
+            seekerTime.put(seeker, timer-waitingTimeSeeker);
+            seeker.setWalkSpeed(0.25F);
+            for (Player otherplayer : playersInArena) {
+                if (otherplayer.canSee(player))
+                    otherplayer.showPlayer(player);
+                if (player.canSee(otherplayer))
+                    player.showPlayer(otherplayer);
+            }
+        }
+    }
     /**
      * 处理玩家加入jjc的情况
      */
@@ -485,8 +480,8 @@ public class Arena implements ConfigurationSerializable {
         }
         LocationSerializable zero = new LocationSerializable(Bukkit.getWorld(player.getWorld().getName()), 0.0D, 0.0D, 0.0D, 0.0F, 0.0F);
         //jjc的四个传送点要有，全零也不行
-        if (lobbyWarp == null || hidersWarp == null || seekersWarp == null || spawnWarp == null ||
-                (lobbyWarp.equals(zero) && hidersWarp.equals(zero) && seekersWarp.equals(zero) && spawnWarp.equals(zero))) {
+        if (lobbyWarp == null || hidersWarp == null || seekersWarp == null || W.config.get(ConfigC.lobbyPosition) == null ||
+                (lobbyWarp.equals(zero) && hidersWarp.equals(zero) && seekersWarp.equals(zero))) {
             MessageM.sendFMessage(player, ConfigC.error_joinWarpsNotSet);
             return;
         }
@@ -731,25 +726,21 @@ public class Arena implements ConfigurationSerializable {
     public void seekersWin() {
         sendArenaMessage(ConfigC.normal_winSeekers);
         for (Player player : playersInArena) {
-            if (seekersWinCommands != null) {
-                for (String command : seekersWinCommands)
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%player%", player.getName()));
-                if (W.config.getFile().getBoolean("vaultSupport")) {
-                    if (BlockHunt.econ != null) {
-                        BlockHunt.econ.depositPlayer(player.getName(), seekersTokenWin);
-                        MessageM.sendFMessage(player, ConfigC.normal_addedVaultBalance, "amount-" + seekersTokenWin);
-                    }
-                    continue;
+            if (W.config.getFile().getBoolean("vaultSupport")) {
+                if (BlockHunt.econ != null) {
+                    BlockHunt.econ.depositPlayer(player.getName(), seekersTokenWin);
+                    MessageM.sendFMessage(player, ConfigC.normal_addedVaultBalance, "amount-" + seekersTokenWin);
                 }
-                if (W.shop.getFile().get(player.getName() + ".tokens") == null) {
-                    W.shop.getFile().set(player.getName() + ".tokens", 0);
-                    W.shop.save();
-                }
-                int playerTokens = W.shop.getFile().getInt(player.getName() + ".tokens");
-                W.shop.getFile().set(player.getName() + ".tokens", playerTokens + seekersTokenWin);
-                W.shop.save();
-                MessageM.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + seekersTokenWin);
+                continue;
             }
+            if (W.shop.getFile().get(player.getName() + ".tokens") == null) {
+                W.shop.getFile().set(player.getName() + ".tokens", 0);
+                W.shop.save();
+            }
+            int playerTokens = W.shop.getFile().getInt(player.getName() + ".tokens");
+            W.shop.getFile().set(player.getName() + ".tokens", playerTokens + seekersTokenWin);
+            W.shop.save();
+            MessageM.sendFMessage(player, ConfigC.normal_addedToken, "amount-" + seekersTokenWin);
         }
         cleanUp();
     }
@@ -763,11 +754,7 @@ public class Arena implements ConfigurationSerializable {
         hidersLeft = new StringBuilder(hidersLeft.substring(0, hidersLeft.length() - 2));
         sendArenaMessage(ConfigC.normal_winHiders, "names-" + hidersLeft);
         for (Player player : playersInArena) {
-            if (seekers.contains(player) &&
-                    hidersWinCommands != null) {
-                for (String command : hidersWinCommands)
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-                            command.replaceAll("%player%", player.getName()));
+            if (seekers.contains(player)) {
                 if (W.config.getFile().getBoolean("vaultSupport")) {
                     if (BlockHunt.econ != null && seekers.contains(player)) {
                         BlockHunt.econ.depositPlayer(player.getName(), hidersTokenWin);

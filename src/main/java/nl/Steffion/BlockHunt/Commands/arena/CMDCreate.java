@@ -24,14 +24,12 @@ public class CMDCreate extends DefaultCMD {
         Arena arena;
         if (W.config.getFile().getBoolean("wandEnabled")) {
           arena = new Arena(args[1], W.pos1.get(player), W.pos2.get(player), 12, 3, 1, 50, 20, 300, 30,
-              new ArrayList(), null, null, null, null, new ArrayList(), 
-              new ArrayList(), new ArrayList(), 10, 50, 8,
-              Arena.ArenaState.WAITING, 0,
+              new ArrayList(), null, null, null,  10, 50, 8,
+              Arena.ArenaState.WAITING,
               Bukkit.getScoreboardManager().getNewScoreboard());
         } else {
           arena = new Arena(args[1], null, null, 12, 3, 1, 50, 20, 300, 30, new ArrayList(), 
-              null, null, null, null, new ArrayList(), new ArrayList(), 
-              new ArrayList(), 10, 50, 8, Arena.ArenaState.WAITING, 0,
+              null, null,  null,  10, 50, 8, Arena.ArenaState.WAITING,
               Bukkit.getScoreboardManager().getNewScoreboard());
         } 
         W.arenas.getFile().set(args[1], arena);

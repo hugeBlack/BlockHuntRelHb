@@ -42,7 +42,6 @@ public class OnInventoryClickEvent implements Listener {
             //认为$r开头的可能是其他界面
             if (event.getView().getTitle().startsWith("§r")) {
                 event.setCancelled(true);
-                BlockHunt.plugin.getLogger().log(Level.WARNING,event.getView().getTitle());
                 if (event.getView().getTitle().equals(MessageM.replaceAll("§r" + W.config.get(ConfigC.shop_title))))
                     ShopHandler(event);
                 else if (event.getView().getTitle().contains(MessageM.replaceAll((String) W.config.get(ConfigC.shop_BlockHuntPassv2Name))))
@@ -396,5 +395,6 @@ public class OnInventoryClickEvent implements Listener {
             W.playerHiderKitMap.put(player, kit);
             MessageM.sendFMessage(player, ConfigC.normal_kitSelectedHider, "name-" + kit.name);
         }
+        player.closeInventory();
     }
 }

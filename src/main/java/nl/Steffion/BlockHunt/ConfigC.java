@@ -74,6 +74,7 @@ public enum ConfigC {
   scoreboard_vaultBank("%NBank:", W.config),
   scoreboard_tokenAmount("%NTokens:", W.config),
   requireInventoryClearOnJoin(Boolean.FALSE, W.config),
+  lobbyPosition(null,W.config),
   log_enabledPlugin("%TAG%N%name%&a&k + %version% is now Enabled.", W.messages),
   log_disabledPlugin("%TAG%N%name%&c&k - %version% is now Disabled.", W.messages),
   help_info("%NDisplays the plugin's info.", W.messages),
@@ -172,14 +173,17 @@ public enum ConfigC {
   error_trueVaultNull("%TAG%EVault has been enabled in the config.yml but cannot find the 'Vault' plugin! The plugin will not run", W.messages),
 
   //kit area
+  error_kitNameNeeded("%TAG%EKit name needed.", W.messages),
   normal_kitCreated("%TAG%NKit %A%name%%N created. Items in your inventory are saved as kit content.", W.messages),
+  error_kitTypeNeeded("%TAG%EKit type needed.", W.messages),
   error_kitAlreadyExist("%TAG%EKit %A%name%%E already exists.", W.messages),
   error_kitDoNotExist("%TAG%EKit %A%name%%E does not exist.", W.messages),
   normal_kitLoaded("%TAG%NKit %A%name%%N loaded to your inventory.", W.messages),
   normal_kitUpdated("%TAG%NKit %A%name%%N updated.", W.messages),
   error_kitOperationNotAvailable("%TAG%EKit operation %A%name%%E not available.", W.messages),
   normal_kitSelectedSeeker("%TAG%NSeeker kit %A%name%%N selected.", W.messages),
-  normal_kitSelectedHider("%TAG%NHider kit %A%name%%N selected.", W.messages);
+  normal_kitSelectedHider("%TAG%NHider kit %A%name%%N selected.", W.messages),
+  normal_lobbyLocationSet("%TAG%NLobby has set to where you are.",W.messages);
   
   public Object value;
   

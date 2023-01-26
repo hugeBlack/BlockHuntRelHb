@@ -34,15 +34,9 @@ public class CMDSetWarp extends DefaultCMD {
                     } else if (warpName.equalsIgnoreCase("hiders")) {
                         arena.hidersWarp = loc;
                         save(arena);
-                        MessageM.sendFMessage(player,
-                                ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
+                        MessageM.sendFMessage(player, ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
                     } else if (warpName.equalsIgnoreCase("seekers")) {
                         arena.seekersWarp = loc;
-                        save(arena);
-                        MessageM.sendFMessage(player,
-                                ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
-                    } else if (warpName.equalsIgnoreCase("spawn")) {
-                        arena.spawnWarp = loc;
                         save(arena);
                         MessageM.sendFMessage(player, ConfigC.normal_setwarpWarpSet, "warp-" + warpName);
                     } else {
@@ -66,7 +60,7 @@ public class CMDSetWarp extends DefaultCMD {
 
     @Override
     public List<String> tabCompleter(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length==2) return new LinkedList<>(Arrays.asList("lobby", "hiders", "seekers", "spawn"));
+        if(args.length==2) return new LinkedList<>(Arrays.asList("lobby", "hiders", "seekers"));
         if(args.length==3) return ArenaHandler.getArenaNames();
         return null;
     }

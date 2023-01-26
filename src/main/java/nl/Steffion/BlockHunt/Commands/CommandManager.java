@@ -40,6 +40,7 @@ public class CommandManager implements CommandExecutor {
         registerCMD(new CMDRemove());
         registerCMD(new CMDTokens());
         registerCMD(new CMDKit());
+        registerCMD(new CMDSetLobby());
     }
 
     @Override
