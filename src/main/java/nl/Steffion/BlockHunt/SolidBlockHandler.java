@@ -20,7 +20,6 @@ public class SolidBlockHandler {
         Block pBlock = player.getLocation().getBlock();
         if (W.hiddenLoc.get(player) != null)
             pBlock = W.hiddenLoc.get(player).getBlock();
-        block.setAmount(5);
         for (Player pl : Bukkit.getOnlinePlayers()) {
             if (!pl.equals(player)) {
                 if (W.hiddenLocWater.get(player) != null) {
@@ -37,7 +36,10 @@ public class SolidBlockHandler {
         }
         player.playSound(player.getLocation(), Sound.ENTITY_BAT_HURT, 1.0F, 1.0F);
         ItemStack playerInvBlock = player.getInventory().getItem(8);
-        if(playerInvBlock!=null) playerInvBlock.removeEnchantment(Enchantment.DURABILITY);
+        if(playerInvBlock!=null){
+            playerInvBlock.removeEnchantment(Enchantment.DURABILITY);
+            playerInvBlock.setAmount(5);
+        }
         for (Player playerShow : Bukkit.getOnlinePlayers())
             playerShow.showPlayer(player);
         MiscDisguise disguise = new MiscDisguise(DisguiseType.FALLING_BLOCK, block.getType());

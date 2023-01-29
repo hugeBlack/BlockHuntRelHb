@@ -143,13 +143,9 @@ public class OnPlayerInteractEvent implements Listener {
                     if (W.hiddenLoc.get(pl) != null) {
                         Block pLoc = event.getClickedBlock();
                         Block moveLocBlock = W.hiddenLoc.get(pl).getBlock();
-                        if (moveLocBlock.getX() == pLoc.getX() &&
-                                moveLocBlock.getY() == pLoc.getY() &&
-                                moveLocBlock.getZ() == pLoc.getZ()) {
-                            W.moveLoc.put(pl, new Location(pl.getWorld(),
-                                    0.0D, 0.0D, 0.0D));
-                            pl.getWorld().playSound(player.getLocation(),
-                                    Sound.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
+                        if (Helpers.isBlockLocEquals(pLoc.getLocation(),moveLocBlock.getLocation())) {
+                            W.moveLoc.put(pl, new Location(pl.getWorld(), 0.0D, 0.0D, 0.0D));
+                            pl.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT, 1.0F, 1.0F);
                             SolidBlockHandler.makePlayerUnsolid(pl);
                         }
                     }
