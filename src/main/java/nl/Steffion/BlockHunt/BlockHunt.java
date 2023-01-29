@@ -37,6 +37,7 @@ public class BlockHunt extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new OnPlayerMoveEvent(), this);
         getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);
         getServer().getPluginManager().registerEvents(new OnSignChangeEvent(), this);
+        getServer().getPluginManager().registerEvents(new OnProjectileLauncherListener(), this);
         ConfigurationSerialization.registerClass(LocationSerializable.class, "BlockHuntLocation");
         ConfigurationSerialization.registerClass(Arena.class, "BlockHuntArena");
         //</editor-fold>
@@ -118,12 +119,12 @@ public class BlockHunt extends JavaPlugin implements Listener {
         //</editor-fold>
 
         MessageM.sendFMessage(null, ConfigC.log_enabledPlugin, "name-" + pdfFile.getName(), "version-" + pdfFile.getVersion(), "autors-" + pdfFile.getAuthors().get(0));
-        //每秒执行一次，对每个jjc进行检查
+        //每gt执行一次，对每个jjc进行检查
         getServer().getScheduler().runTaskTimer(this, () -> {
             for (Arena arena : W.arenaList)
                 arena.tick();
             SignsHandler.updateSigns();
-        }, 0L, 20L);
+        }, 0L, 1L);
     }
 
     public void onDisable() {

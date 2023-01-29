@@ -3,6 +3,7 @@ package nl.Steffion.BlockHunt;
 import jline.internal.Nullable;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -74,6 +75,10 @@ public class Helpers {
         addItemMeta.addItemFlags(ItemFlag.values());
         addItem.setItemMeta(addItemMeta);
         return addItem;
+    }
+
+    public static boolean isBlockLocEquals(Location loc1,Location loc2){
+        return (loc1.getBlockX()==loc2.getBlockX() && loc1.getBlockY()==loc2.getBlockY() && loc1.getBlockY()==loc2.getBlockY());
     }
 }
 

@@ -1,6 +1,7 @@
 package nl.Steffion.BlockHunt;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.DisguiseType;
@@ -15,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -45,7 +47,10 @@ public class Arena implements ConfigurationSerializable {
     public int timer;
     public HashSet<Player> seekers;
     public Scoreboard scoreboard;
+    //储存玩家丢出的投掷物，用于检测雪球砸到已经固定的玩家,<投掷物,投掷的玩家>
+    public HashMap<Entity,Player> projectileOwnerMap = new HashMap<>();
     public HashMap<Player,Integer> seekerTime = new HashMap<>();
+    private int tickToNextSecond = 20;
 
     public Arena(String arenaName, LocationSerializable pos1, LocationSerializable pos2, int maxPlayers, int minPlayers, int amountSeekersOnStart, int timeInLobbyUntilStart, int waitingTimeSeeker, int gameTime, int timeUntilHidersSword, ArrayList<ItemStack> disguiseBlocks, LocationSerializable lobbyWarp, LocationSerializable hidersWarp, LocationSerializable seekersWarp, int seekersTokenWin, int hidersTokenWin, int killTokens, ArenaState gameState, Scoreboard scoreboard) {
         this.arenaName = arenaName;
@@ -346,6 +351,11 @@ public class Arena implements ConfigurationSerializable {
             sendArenaMessage(ConfigC.normal_ingameHiderDied, "playername-" + player.getName(),
                     "left-" + (playersInArena.size() - seekers.size()));
         } else {
+            //先检测seeker是不是还没复活，没复活的话传送回seekerSpawn并return，不用重置seekerTimer
+            if(seekerTime.containsKey(player)){
+                player.teleport(seekersWarp);
+                return;
+            }
             //seeker被杀死不给hider加钱
             sendArenaMessage(ConfigC.normal_ingameSeekerDied, "playername-" + player.getName(), "secs-" + waitingTimeSeeker);
         }
@@ -618,9 +628,31 @@ public class Arena implements ConfigurationSerializable {
     }
     
     /**
-     * 每刻执行，处理jjc在每秒(20tick)需要做的事情
+     * 每刻执行，处理jjc在每gt需要做的事情
      */
     public void tick() {
+        if(tickToNextSecond>0){
+            tickToNextSecond--;
+            Iterator<Entity> it = projectileOwnerMap.keySet().iterator();
+            while(it.hasNext()){
+                Entity nowProjectile = it.next();
+                Player nowProjectileOwner = projectileOwnerMap.get(nowProjectile);
+                if(nowProjectile.isDead()){
+                    it.remove();
+                    continue;
+                }
+                //对jjc内所有玩家的固定情况进行检测，如果玩家是固定的，就判断雪球是否已经运动到玩家所在的方块，如果是，则让玩家取消固定
+                for(Player player:playersInArena){
+                    if(!nowProjectileOwner.canSee(player) && Helpers.isBlockLocEquals(player.getLocation(),nowProjectile.getLocation())){
+                        nowProjectile.remove();
+                        it.remove();
+                        SolidBlockHandler.makePlayerUnsolid(player);
+                    }
+                }
+            }
+            return;
+        }
+        tickToNextSecond = 20;
         if (gameState == ArenaState.WAITING) {
             //如果等待中的玩家足够了就将jjc置为即将开始的状态
             if (playersInArena.size() >= minPlayers) {
